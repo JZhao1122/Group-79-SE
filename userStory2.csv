@@ -1,0 +1,36 @@
+Story ID,Story Name,Description,Priority,Iteration (Sprint) number,Acceptance Criteria,Estimation,Notes,Date started (actual date),Date finished (actual date)
+SI-003,Automatic Expense Categorization,"As a user who wants to track my spending,
+I want the system to automatically categorize my transactions into predefined categories (e.g., groceries, rent, entertainment),
+So that I can easily understand where my money is being spent.",Must have,1,"The system can automatically categorize at least 80% of transactions correctly based on transaction descriptions
+Users can view categorized transactions in a summary report
+Users can manually correct misclassified transactions
+The system learns from user corrections to improve future categorizations
+The system supports at least 10 predefined categories (e.g., groceries, rent, entertainment, transportation, etc.)",7 days,Ensure the AI model is trained on a diverse dataset to handle various transaction descriptions. The system should provide a simple interface for manual corrections.,2025/4/6,2025/4/13
+SI-004,Manual Correction of Misclassified Transactions,"As a user who wants accurate expense tracking,
+I want to be able to manually correct transactions that are misclassified by the AI,
+So that my spending reports are accurate and reliable.",Must have,1,"Users can manually change the category of any transaction
+The system saves user corrections and applies them to future similar transactions
+Users can view a history of corrected transactions
+The system provides a quick way to undo corrections
+The system highlights transactions that have been corrected by the user",5 days,Ensure the manual correction process is intuitive and does not require multiple steps. The system should provide clear feedback when a correction is made.,2025/3/20,2025/3/25
+SI-005,AI Learning from User Corrections,"As a user who frequently corrects misclassified transactions,
+I want the AI to learn from my corrections,
+So that future transactions are categorized more accurately.",Should have,2,"The system tracks user corrections and uses them to retrain the AI model
+The system provides a notification when the AI model has been updated based on user corrections
+Users can view the impact of their corrections on future categorizations
+The system allows users to reset the AI model to its original state if needed
+The system provides a summary of how many corrections have been made and how they have improved categorization accuracy",8 days,Ensure the AI model updates do not introduce new errors. The system should provide clear feedback on how user corrections are improving accuracy.,2025/3/25,2025/4/2
+SI-006,Customizable Expense Categories,"As a user with unique spending habits,
+I want to be able to create and customize my own expense categories,
+So that I can track my spending in a way that makes sense to me.",Could have,3,"Users can create new expense categories and assign them to transactions
+Users can rename or delete existing categories
+The system allows users to merge similar categories
+Users can set default categories for recurring transactions
+The system provides a warning if a category is deleted and transactions are affected",6 days,Ensure the customization process is simple and does not disrupt existing categorizations. The system should provide clear warnings when changes affect existing transactions.,2025/4/3,2025/4/9
+SI-007,Seasonal Spending Pattern Detection,"As a user who wants to understand my seasonal spending habits,
+I want the system to detect and highlight seasonal spending patterns (e.g., higher expenses during holidays),
+So that I can plan my budget accordingly.",Should have,2,"The system can detect seasonal spending patterns based on historical data
+Users can view a summary of seasonal spending trends
+The system provides recommendations for adjusting budgets during peak spending periods
+Users can manually mark transactions as seasonal expenses
+The system provides notifications when seasonal spending patterns are detected",7 days,Ensure the system can differentiate between regular and seasonal spending patterns. The system should provide clear visualizations of seasonal trends.,2025/3/26,2025/4/2
