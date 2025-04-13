@@ -1,0 +1,2 @@
+First Meeting (April 7): The division of labor was clarified, with the project being divided into four groups: Data Processing, AI Algorithm, Frontend & Design, and Backend & Systems.
+Second Meeting (April 13): Specific roles for each team member were finalized, and a hierarchical structure for tasks was established.
