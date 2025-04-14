@@ -1,0 +1,13 @@
+class TransactionStorageTest {
+    @Test
+    void testSaveAndLoadTransaction() throws IOException {
+        Transaction txn = new Transaction(...);
+        TransactionStorage storage = new TransactionStorage();
+        
+        storage.saveTransaction(txn);
+        List<Transaction> loaded = storage.loadTransactions();
+        
+        assertEquals(1, loaded.size());
+        assertEquals(txn.getDescription(), loaded.get(0).getDescription());
+    }
+}

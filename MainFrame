@@ -1,0 +1,30 @@
+// 主窗口布局 - BorderPane结构
+public class MainFrame extends Application {
+    private BorderPane root = new BorderPane();
+    
+    // 顶部菜单栏
+    private HBox createTopMenu() {
+        HBox menuBar = new HBox(10);
+        menuBar.setPadding(new Insets(10));
+        menuBar.setStyle("-fx-background-color: #2c3e50;");
+        
+        Button[] menuButtons = {
+            createMenuButton("仪表盘", "#3498db"),
+            createMenuButton("交易", "#2ecc71"),
+            createMenuButton("预算", "#e74c3c"),
+            createMenuButton("储蓄", "#f39c12"),
+            createMenuButton("报表", "#9b59b6"),
+            createMenuButton("设置", "#95a5a6")
+        };
+        
+        menuBar.getChildren().addAll(menuButtons);
+        return menuBar;
+    }
+    
+    private Button createMenuButton(String text, String color) {
+        Button btn = new Button(text);
+        btn.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white;");
+        btn.setPrefSize(100, 40);
+        return btn;
+    }
+}

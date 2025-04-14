@@ -1,0 +1,22 @@
+// JSON配置管理
+public class AppConfig {
+    private static final String CONFIG_FILE = "config.json";
+    private JsonObject config;
+    
+    public AppConfig() {
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(CONFIG_FILE)));
+            config = Json.createReader(new StringReader(content)).readObject();
+        } catch (IOException e) {
+            config = Json.createObjectBuilder().build();
+        }
+    }
+    
+    public void saveConfig() {
+        try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
+            writer.write(config.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

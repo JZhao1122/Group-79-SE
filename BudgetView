@@ -1,0 +1,41 @@
+// 预算视图
+public class BudgetView extends VBox {
+    public BudgetView() {
+        // 预算类别卡片容器
+        FlowPane budgetCards = new FlowPane();
+        budgetCards.setHgap(15);
+        budgetCards.setVgap(15);
+        
+        // 示例预算卡片
+        for (BudgetCategory category : loadBudgetCategories()) {
+            BudgetCard card = new BudgetCard(category);
+            budgetCards.getChildren().add(card);
+        }
+        
+        // 预算总览图表
+        PieChart budgetChart = createBudgetPieChart();
+        
+        this.getChildren().addAll(budgetChart, budgetCards);
+    }
+    
+    private class BudgetCard extends VBox {
+        public BudgetCard(BudgetCategory category) {
+            ProgressBar progressBar = new ProgressBar();
+            progressBar.setProgress(category.getSpent() / category.getAmount());
+            
+            // 根据超支情况设置颜色
+            if (category.getSpent() > category.getAmount()) {
+                progressBar.setStyle("-fx-accent: #e74c3c;");
+            } else {
+                progressBar.setStyle("-fx-accent: #2ecc71;");
+            }
+            
+            this.getChildren().addAll(
+                new Label(category.getName()),
+                progressBar,
+                new Label(String.format("¥%.2f / ¥%.2f", 
+                    category.getSpent(), category.getAmount()))
+            );
+        }
+    }
+}

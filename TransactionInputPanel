@@ -1,0 +1,43 @@
+// 交易输入面板
+public class TransactionInputPanel extends VBox {
+    public TransactionInputPanel() {
+        // 选项卡式布局
+        TabPane tabPane = new TabPane();
+        
+        // 手动输入标签页
+        Tab manualTab = new Tab("手动输入", createManualInputForm());
+        Tab importTab = new Tab("CSV导入", createCSVImportPanel());
+        
+        tabPane.getTabs().addAll(manualTab, importTab);
+        this.getChildren().add(tabPane);
+    }
+    
+    private GridPane createManualInputForm() {
+        GridPane form = new GridPane();
+        form.setHgap(10);
+        form.setVgap(10);
+        form.setPadding(new Insets(15));
+        
+        // 表单字段
+        TextField amountField = new TextField();
+        DatePicker datePicker = new DatePicker();
+        TextField descField = new TextField();
+        ComboBox<String> categoryCombo = new ComboBox<>();
+        
+        // 添加验证
+        amountField.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*\\.?\\d{0,2}")) {
+                return change;
+            }
+            return null;
+        }));
+        
+        // 布局
+        form.addRow(0, new Label("金额:"), amountField);
+        form.addRow(1, new Label("日期:"), datePicker);
+        form.addRow(2, new Label("描述:"), descField);
+        form.addRow(3, new Label("分类:"), categoryCombo);
+        
+        return form;
+    }
+}
