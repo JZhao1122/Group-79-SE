@@ -1,4 +1,4 @@
-// === SavingsOptimizer.java===
+// === SavingsOptimizer.java ===
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -25,7 +25,7 @@ public class SavingsOptimizer {
 
         @Override
         public String toString() {
-            return String.format(" 储蓄目标：$%.2f, 期限：%s → %s\n→ 每月储蓄：$%.2f\n 建议：%s",
+            return String.format(" Savings Goal: $%.2f, Period: %s → %s\n→ Monthly Saving: $%.2f\n Weekly Saving: $%.2f\n Recommendation: %s",
                     totalGoal, startDate, endDate, monthlyAmount, weeklyAmount, recommendation);
         }
     }
@@ -46,22 +46,22 @@ public class SavingsOptimizer {
 
         String advice;
         if (monthlySave > recentAvgSpend * 0.7) {
-            advice = "建议减少非必要消费，如娱乐或购物类，以保证储蓄计划执行。";
+            advice = "Consider reducing non-essential expenses, such as entertainment or shopping, to meet your savings goal.";
         } else if (monthlySave < recentAvgSpend * 0.3) {
-            advice = "你可以轻松达成储蓄目标，建议适当提高目标或缩短期限。";
+            advice = "You can easily achieve this goal. Consider increasing your target or shortening the deadline.";
         } else {
-            advice = "储蓄计划合理，建议保持当前消费水平。";
+            advice = "The savings plan is reasonable. Maintain your current spending habits.";
         }
 
         return new SavingsPlan(totalGoal, today, deadline, monthlySave, weeklySave, advice);
     }
 
-    // === 多目标增强部分 ===
+    // === Multi-goal enhancement ===
     public static class Goal {
         public String name;
         public double amount;
         public LocalDate deadline;
-        public int priority; // 1高 2中 3低
+        public int priority; // 1 = high, 2 = medium, 3 = low
 
         public Goal(String name, double amount, LocalDate deadline, int priority) {
             this.name = name;
@@ -86,7 +86,7 @@ public class SavingsOptimizer {
 
         @Override
         public String toString() {
-            return String.format(" 目标：%s | 金额：%.2f 元 | 截止：%s\n → 每月需存：%.2f 元，每周需存：%.2f 元\n  建议：%s\n",
+            return String.format(" Goal: %s | Amount: %.2f CNY | Deadline: %s\n → Monthly Saving: %.2f CNY, Weekly Saving: %.2f CNY\n  Recommendation: %s\n",
                     goal.name, goal.amount, goal.deadline.toString(), monthly, weekly, remark);
         }
     }
@@ -109,13 +109,13 @@ public class SavingsOptimizer {
 
             String advice;
             if (monthly > avgMonthSpend * 0.5) {
-                advice = " 金额压力较大，请考虑调整期限或缩减预算";
+                advice = " The saving burden is high. Consider adjusting the deadline or reducing the target.";
             } else if (goal.priority == 1) {
-                advice = " 高优先级目标，建议优先执行";
+                advice = " High priority goal. Recommended to execute with priority.";
             } else if (goal.priority == 3) {
-                advice = " 低优先级目标，如预算紧张可延期";
+                advice = " Low priority goal. Consider postponing if budget is tight.";
             } else {
-                advice = " 合理目标，建议按计划执行";
+                advice = " Reasonable goal. Recommended to follow the plan.";
             }
 
             plans.add(new GoalPlan(goal, monthly, weekly, advice));

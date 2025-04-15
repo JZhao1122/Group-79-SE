@@ -1,4 +1,4 @@
-// === BudgetRecommender.java===
+// === BudgetRecommender.java ===
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
@@ -19,7 +19,7 @@ public class BudgetRecommender {
 
         @Override
         public String toString() {
-            return String.format("类别：%s, 建议：%.2f 元, 说明：%s",
+            return String.format("Category: %s, Suggestion: %.2f CNY, Reason: %s",
                     category, recommendedAmount, explanation);
         }
     }
@@ -50,7 +50,7 @@ public class BudgetRecommender {
 
             if (monthlyTotals.size() == 1) {
                 result.add(new BudgetSuggestion(category, avg,
-                        "仅有1个月历史数据, 建议预算以该值为参考"));
+                        "Only one month of data available, using that as reference."));
                 continue;
             }
 
@@ -62,13 +62,13 @@ public class BudgetRecommender {
 
             if (Math.abs(lastMonthSpend - avg) > 1.5 * stdDev) {
                 adjusted = avg;
-                reason = "最近一个月支出波动较大，维持历史均值";
+                reason = "Significant fluctuation last month; keep average budget.";
             } else if (lastMonthSpend > avg * 1.1) {
                 adjusted = avg * 1.1;
-                reason = "支出略有上升，预算略微提高";
+                reason = "Slight increase detected; increasing budget slightly.";
             } else {
                 adjusted = avg * 1.05;
-                reason = "支出平稳，适度增加预算";
+                reason = "Stable spending; slightly increasing budget.";
             }
 
             result.add(new BudgetSuggestion(category, adjusted, reason));
@@ -115,16 +115,16 @@ public class BudgetRecommender {
 
             if (currentSpend > avg + 1.2 * std) {
                 warned = true;
-                System.out.printf(" - 类别：%s  当前支出：%.2f 元，显著高于均值 %.2f 元 → 建议检查开销。%n",
+                System.out.printf(" - Category: %s  Current spending: %.2f CNY, significantly above average %.2f CNY → Consider reviewing your expenses.%n",
                         category, currentSpend, avg);
             } else if (currentSpend > avg * 1.1) {
-                System.out.printf(" - 类别：%s  当前支出：%.2f 元，略高于均值 %.2f 元。%n",
+                System.out.printf(" - Category: %s  Current spending: %.2f CNY, slightly above average %.2f CNY.%n",
                         category, currentSpend, avg);
             }
         }
 
         if (!warned) {
-            System.out.println(" 未检测到明显超额风险。");
+            System.out.println(" No significant overspending risks detected.");
         }
     }
 

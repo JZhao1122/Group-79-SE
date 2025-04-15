@@ -32,17 +32,17 @@ public class SeasonalSpendingDetector {
         }
         Map<Month, Double> peaks = detectSeasonalSpending(transactions);
 
-        System.out.println("\n >>> 月份支出分布 <<<");
+        System.out.println("\n >>> Monthly Spending Distribution <<<");
         all.keySet().stream().sorted(Comparator.comparingInt(Month::getValue)).forEach(m -> {
             double amt = all.get(m);
-            String mark = peaks.containsKey(m) ? "高峰" : "";
+            String mark = peaks.containsKey(m) ? " [Peak]" : "";
             System.out.printf(" - %s: $%.2f%s%n", m.toString().substring(0, 3), amt, mark);
         });
 
         if (peaks.isEmpty()) {
-            System.out.println("\n 本年度暂无明显季节性支出高峰。");
+            System.out.println("\nNo clear seasonal spending peaks detected for this year.");
         } else {
-            System.out.println("\n 检测到以下季节性高消费月份：");
+            System.out.println("\nDetected seasonal high-spending months:");
             peaks.forEach((month, amount) -> System.out.printf(" - %s: $%.2f%n", month, amount));
         }
     }

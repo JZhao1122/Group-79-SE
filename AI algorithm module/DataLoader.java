@@ -20,7 +20,7 @@ public class DataLoader {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error reading CSV: " + e.getMessage());
+            System.err.println("Failed to read CSV file: " + e.getMessage());
         }
         return transactions;
     }

@@ -44,7 +44,7 @@ public class SpendingPatternAnalyzer {
         int n = values.size();
         if (n < 2) return 0;
 
-        // 简单线性回归：y = a * x + b
+        // Simple linear regression: y = a * x + b
         double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
         for (int i = 0; i < n; i++) {
             double x = i + 1;
@@ -63,17 +63,17 @@ public class SpendingPatternAnalyzer {
         Map<YearMonth, Double> trend = getMonthlySpendingTrend(transactions);
         List<YearMonth> spikes = detectSpendingSpikes(trend);
 
-        System.out.println("\n >>> 月度支出趋势 <<<");
+        System.out.println("\n >>> Monthly Spending Trend <<<");
         for (Map.Entry<YearMonth, Double> entry : trend.entrySet()) {
-            String mark = spikes.contains(entry.getKey()) ? "  异常" : "";
+            String mark = spikes.contains(entry.getKey()) ? "  (Anomaly)" : "";
             System.out.printf(" - %s : $%.2f%s%n", entry.getKey(), entry.getValue(), mark);
         }
 
         double predicted = predictNextMonthSpending(trend);
         YearMonth nextMonth = trend.keySet().stream().max(Comparator.naturalOrder()).orElse(YearMonth.now()).plusMonths(1);
-        System.out.printf("\n 预测下月（%s）支出 ≈ $%.2f%n", nextMonth, predicted);
+        System.out.printf("\n Predicted spending for next month (%s) ≈ $%.2f%n", nextMonth, predicted);
 
-        System.out.println("\n >>> 类别支出趋势（近3月） <<<");
+        System.out.println("\n >>> Category Spending Trend (Last 3 Months) <<<");
         Map<String, Map<YearMonth, Double>> catTrend = getCategorySpendingTrend(transactions);
         YearMonth latest = trend.keySet().stream().max(Comparator.naturalOrder()).orElse(null);
 

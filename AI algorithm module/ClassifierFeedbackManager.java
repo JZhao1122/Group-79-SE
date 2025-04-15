@@ -7,16 +7,16 @@ public class ClassifierFeedbackManager {
     private static final String FEEDBACK_FILE = "data/feedback_log.csv";
     private static final String TRAINING_FILE = "data/train.csv";
 
-    // 记录纠错：保存到 feedback_log.csv
+    // Record correction: save to feedback_log.csv
     public static void recordCorrection(String description, String correctCategory) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FEEDBACK_FILE, true))) {
             writer.write(String.format("%s,%s\n", escape(description), correctCategory));
         } catch (IOException e) {
-            System.err.println(" 写入纠错记录失败: " + e.getMessage());
+            System.err.println(" Failed to write correction record: " + e.getMessage());
         }
     }
 
-    // 查看纠错历史
+    // View correction history
     public static List<String[]> loadCorrectionHistory() {
         List<String[]> list = new ArrayList<>();
         File f = new File(FEEDBACK_FILE);
@@ -28,16 +28,16 @@ public class ClassifierFeedbackManager {
                 if (parts.length == 2) list.add(parts);
             }
         } catch (IOException e) {
-            System.err.println(" 加载纠错历史失败: " + e.getMessage());
+            System.err.println(" Failed to load correction history: " + e.getMessage());
         }
         return list;
     }
 
-    // 将纠错追加进训练集（train.csv）
+    // Append corrections to training data (train.csv)
     public static void updateTrainingData() {
         List<String[]> feedback = loadCorrectionHistory();
         if (feedback.isEmpty()) {
-            System.out.println(" 无需更新训练数据（无新纠错）");
+            System.out.println(" No need to update training data (no new corrections).");
             return;
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(TRAINING_FILE, true))) {
@@ -50,10 +50,10 @@ public class ClassifierFeedbackManager {
                 writer.write(String.format("%s,%.2f,%s,%s,%s\n",
                         today, dummyAmount, category, unescape(desc), dummyPayment));
             }
-            System.out.println(" 已将 " + feedback.size() + " 条纠错写入训练集 train.csv");
+            System.out.println(" Appended " + feedback.size() + " correction(s) to training set (train.csv).");
             new File(FEEDBACK_FILE).delete();
         } catch (IOException e) {
-            System.err.println(" 更新训练数据失败: " + e.getMessage());
+            System.err.println(" Failed to update training data: " + e.getMessage());
         }
     }
 

@@ -11,13 +11,13 @@ public class FeedbackTestRunner {
         List<Transaction> transactions = DataLoader.loadTransactionsFromCSV(path);
         AITransactionClassifier.autoClassify(transactions, trainPath);
 
-        System.out.println(" 加载并分类完成，开始用户反馈纠错模拟：");
+        System.out.println("Data loaded and classification complete. Starting user feedback simulation:");
         int correctionCount = 0;
 
         for (Transaction t : transactions) {
             if (t.category == null || t.category.equalsIgnoreCase("Entertainment")) {
-                System.out.printf("描述：%s\n当前分类：%s\n请输入你认为正确的分类（或回车跳过）：",
-                        t.description, t.category == null ? "未分类" : t.category);
+                System.out.printf("Description: %s\nCurrent category: %s\nEnter the correct category (or press Enter to skip): ",
+                        t.description, t.category == null ? "Uncategorized" : t.category);
                 String input = scanner.nextLine().trim();
                 if (!input.isEmpty()) {
                     ClassifierFeedbackManager.recordCorrection(t.description, input);
@@ -26,13 +26,13 @@ public class FeedbackTestRunner {
             }
         }
 
-        System.out.println("\n 共记录 " + correctionCount + " 条用户纠错。");
+        System.out.println("\nTotal corrections recorded: " + correctionCount);
 
-        System.out.print("是否立即更新训练集 (y/n)：");
+        System.out.print("Would you like to update the training set now? (y/n): ");
         if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
             ClassifierFeedbackManager.updateTrainingData();
         } else {
-            System.out.println(" 反馈记录已保存，可稍后调用 updateTrainingData()。\n");
+            System.out.println("Feedback has been saved. You can call updateTrainingData() later.\n");
         }
     }
 }
