@@ -1,0 +1,35 @@
+private TableView<Transaction> createTransactionTable() {
+    TableView<Transaction> table = new TableView<>();
+    
+    // 列定义
+    TableColumn<Transaction, String> dateCol = new TableColumn<>("日期");
+    dateCol.setCellValueFactory(c -> new SimpleStringProperty(
+        c.getValue().getDate().format(DateTimeFormatter.ISO_DATE)));
+    
+    TableColumn<Transaction, String> amountCol = new TableColumn<>("金额");
+    amountCol.setCellValueFactory(c -> new SimpleStringProperty(
+        String.format("¥%.2f", c.getValue().getAmount())));
+    
+    TableColumn<Transaction, String> platformCol = new TableColumn<>("支付平台");
+    platformCol.setCellValueFactory(c -> new SimpleStringProperty(
+        c.getValue().getPaymentPlatform())));
+    platformCol.setCellFactory(col -> new TableCell<>() {
+        @Override protected void updateItem(String platform, boolean empty) {
+            super.updateItem(platform, empty);
+            if (empty || platform == null) {
+                setText(null);
+                setStyle("");
+            } else {
+                setText(platform);
+                // 平台特定颜色
+                if (platform.contains("微信")) setStyle("-fx-background-color: #00C800;");
+                else if (platform.contains("支付宝")) setStyle("-fx-background-color: #0099E6;");
+                else if (platform.contains("中国银行")) setStyle("-fx-background-color: #D40000;");
+            }
+        }
+    });
+    
+    table.getColumns().addAll(dateCol, amountCol, platformCol);
+    table.setItems(transactions);
+    return table;
+}

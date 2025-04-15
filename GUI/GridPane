@@ -1,0 +1,51 @@
+private GridPane createManualInputForm() {
+    GridPane form = new GridPane();
+    form.setHgap(15);
+    form.setVgap(15);
+    form.setPadding(new Insets(20));
+    
+    // 金额输入（带货币格式验证）
+    TextField amountField = new TextField();
+    amountField.setTextFormatter(new TextFormatter<>(change -> {
+        if (change.getControlNewText().matches("^\\d*\\.?\\d{0,2}$")) {
+            return change;
+        }
+        return null;
+    }));
+    
+    // 日期选择器（限制未来日期）
+    DatePicker datePicker = new DatePicker();
+    datePicker.setDayCellFactory(picker -> new DateCell() {
+        @Override public void updateItem(LocalDate date, boolean empty) {
+            super.updateItem(date, empty);
+            setDisable(empty || date.isAfter(LocalDate.now()));
+        }
+    });
+    
+    // 支付方式下拉框（带自动完成）
+    ComboBox<String> paymentCombo = new ComboBox<>();
+    paymentCombo.getItems().addAll("支付宝", "微信支付", "中国银行", "现金");
+    paymentCombo.setEditable(true);
+    paymentCombo.getEditor().textProperty().addListener((o, old, newVal) -> {
+        if (newVal.length() > 1) {
+            paymentCombo.getItems().setAll(
+                paymentCombo.getItems().stream()
+                    .filter(i -> i.contains(newVal))
+                    .collect(Collectors.toList())
+            );
+        }
+    });
+    
+    // 表单布局
+    form.addRow(0, new Label("金额 (¥):"), amountField);
+    form.addRow(1, new Label("日期:"), datePicker);
+    form.addRow(2, new Label("描述:"), new TextField());
+    form.addRow(3, new Label("支付方式:"), paymentCombo);
+    
+    // 提交按钮
+    Button submitBtn = createStyledButton("添加交易", "#2ECC71");
+    submitBtn.setOnAction(e -> validateAndAddTransaction(amountField, datePicker));
+    form.add(submitBtn, 1, 4);
+    
+    return form;
+}

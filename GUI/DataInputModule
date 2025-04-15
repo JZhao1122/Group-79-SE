@@ -1,0 +1,29 @@
+public interface DataInputModule {
+    String getModuleName();
+    Node getView();
+    ObservableList<Transaction> getTransactionData();
+}
+
+public class ManualInputModule implements DataInputModule {
+    // 实现手动输入模块
+}
+
+public class CSVImportModule implements DataInputModule {
+    // 实现CSV导入模块
+}
+
+// 主控制器中动态加载模块
+public class MainController {
+    private Map<String, DataInputModule> modules = new HashMap<>();
+    
+    public void registerModule(DataInputModule module) {
+        modules.put(module.getModuleName(), module);
+    }
+    
+    public void showModule(String name) {
+        DataInputModule module = modules.get(name);
+        if (module != null) {
+            mainPane.setCenter(module.getView());
+        }
+    }
+}

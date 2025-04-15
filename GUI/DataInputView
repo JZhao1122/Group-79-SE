@@ -1,0 +1,26 @@
+public class DataInputView extends BorderPane {
+    private final ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+    
+    public DataInputView() {
+        // 顶部：模式选择标签
+        TabPane modeTabs = new TabPane();
+        Tab manualTab = new Tab("手动输入", createManualInputForm());
+        Tab importTab = new Tab("CSV导入", createCSVImportPanel());
+        modeTabs.getTabs().addAll(manualTab, importTab);
+        
+        // 中部：数据表格展示
+        TableView<Transaction> tableView = createTransactionTable();
+        
+        // 底部：操作按钮
+        HBox buttonBar = new HBox(10, 
+            createStyledButton("保存", "#00C800"),
+            createStyledButton("清除", "#E74C3C"),
+            createStyledButton("导出CSV", "#3498DB")
+        );
+        buttonBar.setPadding(new Insets(10));
+        
+        this.setTop(modeTabs);
+        this.setCenter(tableView);
+        this.setBottom(buttonBar);
+    }
+}
