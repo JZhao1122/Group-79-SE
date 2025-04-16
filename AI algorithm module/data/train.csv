@@ -1,0 +1,151 @@
+Date,Amount,Category,Description,PaymentMethod
+2025-04-14,26.05,Dining,Steakhouse,Manual
+2025-04-14,70.26,Dining,Café Nero,Manual
+2025-04-14,123.51,Dining,Sushi,Manual
+2025-04-14,134.81,Dining,Pizza,Manual
+2025-04-14,108.56,Dining,KFC,Manual
+2025-04-14,43.13,Dining,Starbucks,Manual
+2025-04-14,69.55,Dining,Sushi,Manual
+2025-04-14,91.37,Dining,Boba Tea,Manual
+2025-04-14,149.16,Dining,Sushi,Manual
+2025-04-14,99.56,Dining,McDonald's,Manual
+2025-04-14,94.34,Dining,Pizza,Manual
+2025-04-14,123.27,Dining,Steakhouse,Manual
+2025-04-14,34.33,Dining,Boba Tea,Manual
+2025-04-14,66.23,Dining,Sushi,Manual
+2025-04-14,140.49,Dining,Steakhouse,Manual
+2025-04-14,33.65,Transport,Train Ticket,Manual
+2025-04-14,24.98,Transport,Bus Fare,Manual
+2025-04-14,47.62,Transport,Bus Fare,Manual
+2025-04-14,65.42,Transport,Bus Fare,Manual
+2025-04-14,58.18,Transport,High-speed Rail,Manual
+2025-04-14,56.89,Transport,Train Ticket,Manual
+2025-04-14,36.89,Transport,Metro Recharge,Manual
+2025-04-14,35.51,Transport,Didi,Manual
+2025-04-14,22.6,Transport,Train Ticket,Manual
+2025-04-14,54.53,Transport,Train Ticket,Manual
+2025-04-14,36.83,Transport,Didi,Manual
+2025-04-14,45.28,Transport,Didi,Manual
+2025-04-14,43.93,Transport,Flight,Manual
+2025-04-14,11.3,Transport,Metro Recharge,Manual
+2025-04-14,79.76,Transport,Flight,Manual
+2025-04-14,622.15,Shopping,JD.com,Manual
+2025-04-14,1415.87,Shopping,Miniso,Manual
+2025-04-14,1231.85,Shopping,Apple Store,Manual
+2025-04-14,690.0,Shopping,Uniqlo,Manual
+2025-04-14,1958.07,Shopping,Uniqlo,Manual
+2025-04-14,281.4,Shopping,Zara,Manual
+2025-04-14,304.56,Shopping,Apple Store,Manual
+2025-04-14,1382.39,Shopping,Miniso,Manual
+2025-04-14,672.62,Shopping,Apple Store,Manual
+2025-04-14,474.42,Shopping,Apple Store,Manual
+2025-04-14,263.19,Shopping,Apple Store,Manual
+2025-04-14,1229.25,Shopping,Zara,Manual
+2025-04-14,300.89,Shopping,Apple Store,Manual
+2025-04-14,857.4,Shopping,Uniqlo,Manual
+2025-04-14,1626.66,Shopping,Tmall,Manual
+2025-04-14,2165.25,Travel,Museum Entry,Manual
+2025-04-14,1570.31,Travel,Cruise Ticket,Manual
+2025-04-14,944.5,Travel,Trip to Tokyo,Manual
+2025-04-14,323.3,Travel,Hotel Booking,Manual
+2025-04-14,1198.49,Travel,Spring Festival Trip,Manual
+2025-04-14,1858.59,Travel,Airbnb,Manual
+2025-04-14,1706.63,Travel,Cruise Ticket,Manual
+2025-04-14,649.97,Travel,Spring Festival Trip,Manual
+2025-04-14,1875.72,Travel,Museum Entry,Manual
+2025-04-14,2793.18,Travel,Hotel Booking,Manual
+2025-04-14,2385.98,Travel,Trip to Tokyo,Manual
+2025-04-14,1481.4,Travel,Museum Entry,Manual
+2025-04-14,2602.32,Travel,Cruise Ticket,Manual
+2025-04-14,1747.55,Travel,Spring Festival Trip,Manual
+2025-04-14,713.68,Travel,Cruise Ticket,Manual
+2025-04-14,442.85,Education,MOOC,Manual
+2025-04-14,851.7,Education,Tuition Fee,Manual
+2025-04-14,1018.97,Education,Skill Bootcamp,Manual
+2025-04-14,494.87,Education,Exam Fee,Manual
+2025-04-14,148.63,Education,Tuition Fee,Manual
+2025-04-14,1185.46,Education,Online Course,Manual
+2025-04-14,977.62,Education,Online Course,Manual
+2025-04-14,800.57,Education,Tuition Fee,Manual
+2025-04-14,987.79,Education,Exam Fee,Manual
+2025-04-14,801.93,Education,Textbook,Manual
+2025-04-14,548.59,Education,MOOC,Manual
+2025-04-14,908.75,Education,Textbook,Manual
+2025-04-14,699.2,Education,Textbook,Manual
+2025-04-14,700.27,Education,MOOC,Manual
+2025-04-14,915.63,Education,Textbook,Manual
+2025-04-14,206.65,Entertainment,Netflix,Manual
+2025-04-14,31.7,Entertainment,Streaming,Manual
+2025-04-14,234.1,Entertainment,KTV,Manual
+2025-04-14,113.78,Entertainment,Board Game,Manual
+2025-04-14,234.76,Entertainment,Game Recharge,Manual
+2025-04-14,298.41,Entertainment,Netflix,Manual
+2025-04-14,285.23,Entertainment,Concert,Manual
+2025-04-14,121.28,Entertainment,KTV,Manual
+2025-04-14,33.94,Entertainment,Game Recharge,Manual
+2025-04-14,180.96,Entertainment,Netflix,Manual
+2025-04-14,271.47,Entertainment,Movie Ticket,Manual
+2025-04-14,99.51,Entertainment,Game Recharge,Manual
+2025-04-14,97.63,Entertainment,Concert,Manual
+2025-04-14,118.48,Entertainment,Board Game,Manual
+2025-04-14,197.82,Entertainment,Concert,Manual
+2025-04-14,170.43,Health,Eyewear,Manual
+2025-04-14,448.37,Health,Fitness Class,Manual
+2025-04-14,583.67,Health,Eyewear,Manual
+2025-04-14,615.77,Health,Fitness Class,Manual
+2025-04-14,784.16,Health,Pharmacy,Manual
+2025-04-14,191.0,Health,Vaccination,Manual
+2025-04-14,278.72,Health,Eyewear,Manual
+2025-04-14,346.55,Health,Medicine,Manual
+2025-04-14,248.6,Health,Vaccination,Manual
+2025-04-14,196.9,Health,Vaccination,Manual
+2025-04-14,684.28,Health,Pharmacy,Manual
+2025-04-14,158.34,Health,Vaccination,Manual
+2025-04-14,422.81,Health,Medicine,Manual
+2025-04-14,379.61,Health,Hospital Bill,Manual
+2025-04-14,209.91,Health,Hospital Bill,Manual
+2025-04-14,720.94,Gift,Birthday Gift,Manual
+2025-04-14,459.42,Gift,Birthday Gift,Manual
+2025-04-14,467.49,Gift,Perfume,Manual
+2025-04-14,577.51,Gift,Wedding Gift,Manual
+2025-04-14,659.25,Gift,Souvenir,Manual
+2025-04-14,808.7,Gift,Chocolates,Manual
+2025-04-14,747.77,Gift,Perfume,Manual
+2025-04-14,485.21,Gift,Anniversary Gift,Manual
+2025-04-14,341.7,Gift,Wedding Gift,Manual
+2025-04-14,81.78,Gift,Chocolates,Manual
+2025-04-14,486.09,Gift,Chocolates,Manual
+2025-04-14,674.72,Gift,Perfume,Manual
+2025-04-14,589.39,Gift,Chocolates,Manual
+2025-04-14,935.76,Gift,Anniversary Gift,Manual
+2025-04-14,574.18,Gift,Anniversary Gift,Manual
+2025-04-14,1921.08,Housing,Electricity Bill,Manual
+2025-04-14,2129.43,Housing,Smart Lock,Manual
+2025-04-14,829.29,Housing,Furniture,Manual
+2025-04-14,721.22,Housing,Home Decor,Manual
+2025-04-14,484.17,Housing,Internet Fee,Manual
+2025-04-14,2033.99,Housing,Smart Lock,Manual
+2025-04-14,1403.79,Housing,Furniture,Manual
+2025-04-14,468.69,Housing,Furniture,Manual
+2025-04-14,2250.56,Housing,Electricity Bill,Manual
+2025-04-14,1734.52,Housing,Internet Fee,Manual
+2025-04-14,2483.74,Housing,Furniture,Manual
+2025-04-14,1565.43,Housing,Rent,Manual
+2025-04-14,2126.16,Housing,Internet Fee,Manual
+2025-04-14,999.93,Housing,Furniture,Manual
+2025-04-14,2215.76,Housing,Electricity Bill,Manual
+2025-04-14,777.82,Finance,Stock Purchase,Manual
+2025-04-14,2396.02,Finance,Insurance,Manual
+2025-04-14,2252.59,Finance,Loan Payment,Manual
+2025-04-14,2660.0,Finance,Stock Purchase,Manual
+2025-04-14,199.21,Finance,Stock Purchase,Manual
+2025-04-14,3805.43,Finance,Tax,Manual
+2025-04-14,3375.04,Finance,Stock Purchase,Manual
+2025-04-14,1568.2,Finance,Loan Payment,Manual
+2025-04-14,2886.02,Finance,Bank Fee,Manual
+2025-04-14,3665.51,Finance,Tax,Manual
+2025-04-14,2985.91,Finance,Stock Purchase,Manual
+2025-04-14,4739.59,Finance,Mutual Fund,Manual
+2025-04-14,2609.37,Finance,Loan Payment,Manual
+2025-04-14,247.87,Finance,Bank Fee,Manual
+2025-04-14,3718.47,Finance,Mutual Fund,Manual
