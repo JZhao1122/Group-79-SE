@@ -24,11 +24,26 @@ public class BudgetRecommender {
         }
     }
 
+    private static double predictNextMonth(List<Double> monthlyTotals) {
+        int n = monthlyTotals.size();
+        if (n < 2) return monthlyTotals.get(n - 1);
+        double sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+        for (int i = 0; i < n; i++) {
+            sumX += i;
+            sumY += monthlyTotals.get(i);
+            sumXY += i * monthlyTotals.get(i);
+            sumXX += i * i;
+        }
+        double slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX + 1e-8);
+        double intercept = (sumY - slope * sumX) / n;
+        return slope * n + intercept;
+    }
+
     public static List<BudgetSuggestion> recommendBudget(List<Transaction> transactions) {
         Map<String, Map<Month, List<Double>>> categoryMonthlyMap = new HashMap<>();
 
         for (Transaction t : transactions) {
-            if (t.category == null) continue;
+            if (t.category == null || t.amount < 0) continue;
             categoryMonthlyMap
                     .computeIfAbsent(t.category, k -> new HashMap<>())
                     .computeIfAbsent(t.date.getMonth(), k -> new ArrayList<>())
@@ -36,6 +51,7 @@ public class BudgetRecommender {
         }
 
         List<BudgetSuggestion> result = new ArrayList<>();
+        Month currentMonth = LocalDate.now().getMonth();
 
         for (String category : categoryMonthlyMap.keySet()) {
             Map<Month, List<Double>> monthly = categoryMonthlyMap.get(category);
@@ -48,6 +64,11 @@ public class BudgetRecommender {
 
             double avg = monthlyTotals.stream().mapToDouble(d -> d).average().orElse(0);
 
+            double currentMonthTotal = monthly.getOrDefault(currentMonth, new ArrayList<>())
+                    .stream().mapToDouble(Double::doubleValue).sum();
+            double adjusted = avg;
+            String reason = "";
+
             if (monthlyTotals.size() == 1) {
                 result.add(new BudgetSuggestion(category, avg,
                         "Only one month of data available, using that as reference."));
@@ -55,15 +76,18 @@ public class BudgetRecommender {
             }
 
             double stdDev = computeStdDev(monthlyTotals, avg);
-            double lastMonthSpend = monthlyTotals.get(monthlyTotals.size() - 1);
 
-            double adjusted = avg;
-            String reason;
-
-            if (Math.abs(lastMonthSpend - avg) > 1.5 * stdDev) {
+            double trendPrediction = predictNextMonth(monthlyTotals);
+            if (trendPrediction > avg * 1.1) {
+                adjusted = trendPrediction;
+                reason = "Upward spending trend detected, using trend prediction.";
+            } else if (currentMonthTotal > avg + stdDev) {
+                adjusted = currentMonthTotal * 1.05;
+                reason = "Seasonal peak detected for this month, budget slightly increased.";
+            } else if (Math.abs(currentMonthTotal - avg) > 1.5 * stdDev) {
                 adjusted = avg;
                 reason = "Significant fluctuation last month; keep average budget.";
-            } else if (lastMonthSpend > avg * 1.1) {
+            } else if (currentMonthTotal > avg * 1.1) {
                 adjusted = avg * 1.1;
                 reason = "Slight increase detected; increasing budget slightly.";
             } else {
@@ -85,7 +109,16 @@ public class BudgetRecommender {
         return Math.sqrt(sumSquaredDiffs / values.size());
     }
 
-    public static void detectAbnormalBudgets(List<Transaction> transactions) {
+    private static double computeIQR(List<Double> values) {
+        List<Double> sorted = new ArrayList<>(values);
+        Collections.sort(sorted);
+        int n = sorted.size();
+        double q1 = sorted.get(n / 4);
+        double q3 = sorted.get(3 * n / 4);
+        return q3 - q1;
+    }
+
+    public static List<Map<String, Object>> detectAbnormalBudgetsStructured(List<Transaction> transactions) {
         Map<String, Double> currentMonthTotal = new HashMap<>();
         Map<String, List<Double>> categoryMonthlyHistory = new HashMap<>();
 
@@ -105,27 +138,33 @@ public class BudgetRecommender {
             categoryMonthlyHistory.get(t.category).add(t.amount);
         }
 
-        boolean warned = false;
+        List<Map<String, Object>> result = new ArrayList<>();
 
         for (String category : currentMonthTotal.keySet()) {
             double currentSpend = currentMonthTotal.get(category);
             List<Double> history = categoryMonthlyHistory.get(category);
             double avg = history.stream().mapToDouble(d -> d).average().orElse(0);
-            double std = computeStdDev(history, avg);
+            double iqr = computeIQR(history);
 
-            if (currentSpend > avg + 1.2 * std) {
-                warned = true;
-                System.out.printf(" - Category: %s  Current spending: %.2f CNY, significantly above average %.2f CNY → Consider reviewing your expenses.%n",
-                        category, currentSpend, avg);
-            } else if (currentSpend > avg * 1.1) {
-                System.out.printf(" - Category: %s  Current spending: %.2f CNY, slightly above average %.2f CNY.%n",
-                        category, currentSpend, avg);
+            Map<String, Object> record = new HashMap<>();
+            record.put("category", category);
+            record.put("currentSpend", currentSpend);
+            record.put("average", avg);
+            record.put("iqr", iqr);
+
+            if (currentSpend > avg + 1.5 * iqr) {
+                record.put("level", "high");
+                record.put("message", "Significantly above normal range, please review.");
+            } else if (currentSpend > avg + 0.75 * iqr) {
+                record.put("level", "medium");
+                record.put("message", "Slightly above normal range.");
+            } else {
+                record.put("level", "normal");
+                record.put("message", "No significant overspending detected.");
             }
+            result.add(record);
         }
-
-        if (!warned) {
-            System.out.println(" No significant overspending risks detected.");
-        }
+        return result;
     }
 
     private static String getYearMonth(LocalDate date) {
