@@ -25,14 +25,23 @@ public class SpendingPatternAnalyzer {
         return result;
     }
 
+    private static double computeIQR(List<Double> values) {
+        List<Double> sorted = new ArrayList<>(values);
+        Collections.sort(sorted);
+        int n = sorted.size();
+        double q1 = sorted.get(n / 4);
+        double q3 = sorted.get(3 * n / 4);
+        return q3 - q1;
+    }
+
     public static List<YearMonth> detectSpendingSpikes(Map<YearMonth, Double> monthlySpending) {
         List<Double> values = new ArrayList<>(monthlySpending.values());
         double avg = values.stream().mapToDouble(d -> d).average().orElse(0);
-        double std = Math.sqrt(values.stream().mapToDouble(d -> Math.pow(d - avg, 2)).sum() / values.size());
+        double iqr = computeIQR(values);
 
         List<YearMonth> spikes = new ArrayList<>();
         for (Map.Entry<YearMonth, Double> entry : monthlySpending.entrySet()) {
-            if (entry.getValue() > avg + 1.5 * std) {
+            if (entry.getValue() > avg + 1.5 * iqr) {
                 spikes.add(entry.getKey());
             }
         }
@@ -40,15 +49,21 @@ public class SpendingPatternAnalyzer {
     }
 
     public static double predictNextMonthSpending(Map<YearMonth, Double> monthlySpending) {
+        
         List<Double> values = new ArrayList<>(monthlySpending.values());
-        int n = values.size();
-        if (n < 2) return 0;
+        double avg = values.stream().mapToDouble(d -> d).average().orElse(0);
+        double iqr = computeIQR(values);
+        List<Double> filtered = new ArrayList<>();
+        for (double v : values) {
+            if (v < avg + 1.5 * iqr) filtered.add(v);
+        }
+        int n = filtered.size();
+        if (n < 2) return avg;
 
-        // Simple linear regression: y = a * x + b
         double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
         for (int i = 0; i < n; i++) {
             double x = i + 1;
-            double y = values.get(i);
+            double y = filtered.get(i);
             sumX += x;
             sumY += y;
             sumXY += x * y;
