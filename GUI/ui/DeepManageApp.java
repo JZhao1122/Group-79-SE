@@ -1,12 +1,9 @@
 package ui;// Import services and mocks
-import service.*;
-import mock.*;
-// Import UI panels
-
-// Import Swing and AWT classes
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.*;
+import mock.*;
+import service.*;
 
 public class DeepManageApp extends JFrame {
 
@@ -21,7 +18,7 @@ public class DeepManageApp extends JFrame {
 
     // --- Services (using Mock implementations) ---
     // Instantiate mock services directly here
-    private final FinancialTransactionService financialTransactionService = new MockFinancialTransactionService();
+    private final FinancialTransactionService financialTransactionService = new FinancialTransactionServiceImpl();
     private final FinancialHealthAlService financialHealthAlService = new MockFinancialHealthAlService();
     private final TransactionAnalysisAlService transactionAnalysisAlService = new MockTransactionAnalysisAlServic();
     private final TransactionQueryService transactionQueryService = new MockTransactionQueryService();
@@ -38,7 +35,7 @@ public class DeepManageApp extends JFrame {
     private JPanel sidebarPanel;
 
     public DeepManageApp() {
-        setTitle("DeepManage - AI Expense Assistant (Mock Demo)");
+        setTitle("DeepManage - AI Expense Assistant");
         setSize(950, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

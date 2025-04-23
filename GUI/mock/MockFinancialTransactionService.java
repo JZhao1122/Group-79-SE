@@ -2,9 +2,9 @@ package mock;
 
 import dto.TransactionData;
 import exception.TransactionException;
-import service.FinancialTransactionService;
 import java.io.IOException;
 import java.io.InputStream;
+import service.FinancialTransactionService;
 
 public class MockFinancialTransactionService implements FinancialTransactionService {
     private long transactionCounter = 0;
