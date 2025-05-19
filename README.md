@@ -32,15 +32,10 @@
 > ⚠️ Java 17+ is recommended
 
 ```bash
-# Compile all Java files (from project root)
 mkdir bin
 find . -name "*.java" > sources.txt
-# Or this statement in windows system: Get-ChildItem -Recurse -Filter "*.java" | Select-Object -ExpandProperty FullName > sources.txt
 javac -d bin @sources.txt -Xlint:deprecation 
-# Or this statement in windows system: javac -d bin (Get-Content sources.txt) -Xlint:deprecation
 rm sources.txt
-
-# run project
 java -cp bin ui.DeepManageApp
 ```
 

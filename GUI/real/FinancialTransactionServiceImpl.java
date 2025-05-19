@@ -108,6 +108,7 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
         } catch (NumberFormatException e) {
             throw new TransactionException("Invalid amount format: " + parts[1], e);
         } catch (Exception e) {
+            // e.printStackTrace();
             throw new TransactionException("Invalid transaction data: " + line, e);
         }
     }
