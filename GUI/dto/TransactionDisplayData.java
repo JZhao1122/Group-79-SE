@@ -10,7 +10,7 @@ public class TransactionDisplayData {
     private BigDecimal amount;
     private String paymentMethod;
     public String aiSuggestedCategory; // 来自 TransactionAnalysisAlService
-    private String currentCategory;     // 已确认或现有的分类
+    private String currentCategory;     
 
     // Constructor
     public TransactionDisplayData(String id, LocalDate date, String description, BigDecimal amount, String paymentMethod, String aiSuggestedCategory, String currentCategory) {

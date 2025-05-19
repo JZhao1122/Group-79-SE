@@ -5,6 +5,7 @@ import service.FinancialHealthAlService;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.math.RoundingMode;
 
 public class MockFinancialHealthAlService implements FinancialHealthAlService {
     @Override
@@ -30,9 +31,9 @@ public class MockFinancialHealthAlService implements FinancialHealthAlService {
         BigDecimal shortTerm = availableSavings.multiply(new BigDecimal("0.3"));
         BigDecimal longTerm = availableSavings.subtract(emergency).subtract(shortTerm);
         return Map.of(
-                "Emergency Fund", emergency.setScale(2, BigDecimal.ROUND_HALF_UP),
-                "Short-term Goals", shortTerm.setScale(2, BigDecimal.ROUND_HALF_UP),
-                "Long-term Investment", longTerm.setScale(2, BigDecimal.ROUND_HALF_UP)
+                "Emergency Fund", emergency.setScale(2, RoundingMode.HALF_UP),
+                "Short-term Goals", shortTerm.setScale(2, RoundingMode.HALF_UP),
+                "Long-term Investment", longTerm.setScale(2, RoundingMode.HALF_UP)
         );
     }
 

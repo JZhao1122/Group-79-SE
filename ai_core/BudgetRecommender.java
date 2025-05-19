@@ -118,6 +118,14 @@ public class BudgetRecommender {
         return q3 - q1;
     }
 
+    // 新增方法，兼容TestRunner.java的调用
+    public static void detectAbnormalBudgets(List<Transaction> transactions) {
+        List<Map<String, Object>> results = detectAbnormalBudgetsStructured(transactions);
+        for (Map<String, Object> record : results) {
+            System.out.println(record);
+        }
+    }
+
     public static List<Map<String, Object>> detectAbnormalBudgetsStructured(List<Transaction> transactions) {
         Map<String, Double> currentMonthTotal = new HashMap<>();
         Map<String, List<Double>> categoryMonthlyHistory = new HashMap<>();

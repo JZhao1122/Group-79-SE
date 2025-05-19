@@ -3,7 +3,9 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import mock.*;
+import real.FinancialTransactionServiceImpl;
 import service.*;
+import real.*;
 
 public class DeepManageApp extends JFrame {
 
@@ -18,10 +20,15 @@ public class DeepManageApp extends JFrame {
 
     // --- Services (using Mock implementations) ---
     // Instantiate mock services directly here
-    private final FinancialTransactionService financialTransactionService = new FinancialTransactionServiceImpl();
+    // --- Services (using real implementations) ---
+    // 先实例化AI服务（用你自己的真实实现或MockTransactionAnalysisAlServic）
+    private final TransactionAnalysisAlService transactionAnalysisAlService = new MockTransactionAnalysisAlServic(); // 或真实AI服务
+    // 用AI服务实例化真实的FinancialTransactionServiceImpl
+    private final FinancialTransactionService financialTransactionService = new FinancialTransactionServiceImpl(transactionAnalysisAlService);
+    // 用真实的FinancialTransactionServiceImpl实例化TransactionQueryServiceImpl
+    private final TransactionQueryService transactionQueryService = new TransactionQueryServiceImpl(financialTransactionService);
+    // 其他服务可以继续用mock
     private final FinancialHealthAlService financialHealthAlService = new MockFinancialHealthAlService();
-    private final TransactionAnalysisAlService transactionAnalysisAlService = new MockTransactionAnalysisAlServic();
-    private final TransactionQueryService transactionQueryService = new MockTransactionQueryService();
     private final FinancialInsightsAlService financialInsightsAlService = new MockFinancialInsightsAlService();
     private final PortfolioIntelligenceAlService portfolioIntelligenceAlService = new MockPortfolioIntelligenceAlService();
 

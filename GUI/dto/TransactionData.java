@@ -9,6 +9,7 @@ public class TransactionData {
     private String description;
     private String paymentMethod;
     private String category;
+    private String id;
 
     // Default constructor
     public TransactionData() {}
@@ -33,5 +34,13 @@ public class TransactionData {
     public String toString() {
         return String.format("%s | %s | %s | %s | %s", 
             date, amount, category, description, paymentMethod);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
