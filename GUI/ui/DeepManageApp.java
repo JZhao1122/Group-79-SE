@@ -28,9 +28,9 @@ public class DeepManageApp extends JFrame {
     // 用真实的FinancialTransactionServiceImpl实例化TransactionQueryServiceImpl
     private final TransactionQueryService transactionQueryService = new TransactionQueryServiceImpl(financialTransactionService);
     // 其他服务可以继续用mock
-    private final FinancialHealthAlService financialHealthAlService = new MockFinancialHealthAlService();
-    private final FinancialInsightsAlService financialInsightsAlService = new MockFinancialInsightsAlService();
-    private final PortfolioIntelligenceAlService portfolioIntelligenceAlService = new MockPortfolioIntelligenceAlService();
+    private final FinancialHealthAlService financialHealthAlService = new MockFinancialHealthAlService(financialTransactionService);
+    private final FinancialInsightsAlService financialInsightsAlService = new MockFinancialInsightsAlService(financialTransactionService);
+    private final PortfolioIntelligenceAlService portfolioIntelligenceAlService = new MockPortfolioIntelligenceAlService(financialTransactionService, "mock");
 
     // --- User ID (Hardcoded for demo) ---
     private final String currentUserId = "user123";
