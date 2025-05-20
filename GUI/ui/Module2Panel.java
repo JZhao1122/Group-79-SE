@@ -1,13 +1,12 @@
 package ui;
 
 import exception.AlException;
-import service.FinancialHealthAlService;
-
-import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import javax.swing.*;
+import service.FinancialHealthAlService;
 
 public class Module2Panel extends JPanel {
 

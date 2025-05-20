@@ -31,12 +31,25 @@
 
 > ⚠️ Java 17+ is recommended
 
+**MaxOS**
 ```bash
 rm -rv bin
 mkdir bin
 find . -name "*.java" > sources.txt
 javac -d bin @sources.txt -Xlint:deprecation 
 rm sources.txt
+java -cp bin ui.DeepManageApp
+```
+
+**Windows**
+```bash
+# Compile all Java files (from project root)
+mkdir bin
+Get-ChildItem -Recurse -Filter "*.java" | Select-Object -ExpandProperty FullName > sources.txt
+javac -d bin (Get-Content sources.txt) -Xlint:deprecation
+rm sources.txt
+
+# run project
 java -cp bin ui.DeepManageApp
 ```
 

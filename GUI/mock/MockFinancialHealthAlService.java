@@ -47,7 +47,7 @@ public class MockFinancialHealthAlService implements FinancialHealthAlService {
 
         return budget;
     }
-
+ 
     @Override
     public Map<String, BigDecimal> allocateSavings(String userId, BigDecimal availableSavings) throws AlException {
         System.out.println("[DeepSeek] Allocating savings for user: " + userId + ", available: " + availableSavings);

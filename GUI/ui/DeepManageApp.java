@@ -5,7 +5,6 @@ import javax.swing.border.Border;
 import mock.*;
 import real.FinancialTransactionServiceImpl;
 import service.*;
-import real.*;
 
 public class DeepManageApp extends JFrame {
 
