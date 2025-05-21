@@ -130,4 +130,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     public List<TransactionData> getAllTransactions() {
         return new ArrayList<>(transactionList);
     }
+
+    @Override
+    public List<TransactionData> getAllTransactionsByUserId(String userId) {
+        throw new UnsupportedOperationException("Unimplemented method 'getAllTransactionsByUserId'");
+    }
 }

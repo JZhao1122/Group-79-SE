@@ -1,37 +1,37 @@
-package ui;// Import services and mocks
+package ui;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
+
 import mock.*;
 import real.FinancialTransactionServiceImpl;
 import service.*;
 
 public class DeepManageApp extends JFrame {
 
-    // --- Color Palette (Centralized for UI consistency) ---
-    public static final Color COLOR_TOP_BAR = new Color(0x5DADE2); // Light Blueish
-    public static final Color COLOR_SIDEBAR_BACKGROUND = new Color(0x2C3E50); // Dark Blue/Gray
+    // --- Color Palette ---
+    public static final Color COLOR_TOP_BAR = new Color(0x5DADE2);
+    public static final Color COLOR_SIDEBAR_BACKGROUND = new Color(0x2C3E50);
     public static final Color COLOR_SIDEBAR_TEXT = Color.WHITE;
-    public static final Color COLOR_SIDEBAR_SELECTION = new Color(0x3498DB); // Brighter Blue for selection
-    public static final Color COLOR_MAIN_BACKGROUND = Color.WHITE; // White or new Color(0xF5F5F5) for light gray
+    public static final Color COLOR_SIDEBAR_SELECTION = new Color(0x3498DB);
+    public static final Color COLOR_MAIN_BACKGROUND = Color.WHITE;
     public static final Color COLOR_BUTTON_TEXT = Color.BLACK;
-    public static final Border SIDEBAR_BUTTON_BORDER = BorderFactory.createEmptyBorder(10, 15, 10, 15); // Padding
+    public static final Border SIDEBAR_BUTTON_BORDER = BorderFactory.createEmptyBorder(10, 15, 10, 15);
+    public static final Border MAIN_PANEL_BORDER = BorderFactory.createEmptyBorder(20, 20, 20, 20);
+    public static final Border MAIN_PANEL_HEADER_BORDER = BorderFactory.createEmptyBorder(0, 0, 15, 0);
+    public static final Border MAIN_PANEL_CONTENT_BORDER = BorderFactory.createEmptyBorder(15, 0, 0, 0);
+    public static final Border MAIN_PANEL_FOOTER_BORDER = BorderFactory.createEmptyBorder(15, 0, 0, 0);
 
-    // --- Services (using Mock implementations) ---
-    // Instantiate mock services directly here
-    // --- Services (using real implementations) ---
-    // 先实例化AI服务（用你自己的真实实现或MockTransactionAnalysisAlServic）
-    private final TransactionAnalysisAlService transactionAnalysisAlService = new MockTransactionAnalysisAlServic(); // 或真实AI服务
-    // 用AI服务实例化真实的FinancialTransactionServiceImpl
-    private final FinancialTransactionService financialTransactionService = new FinancialTransactionServiceImpl(transactionAnalysisAlService);
-    // 用真实的FinancialTransactionServiceImpl实例化TransactionQueryServiceImpl
-    private final TransactionQueryService transactionQueryService = new TransactionQueryServiceImpl(financialTransactionService);
-    // 其他服务可以继续用mock
-    private final FinancialHealthAlService financialHealthAlService = new MockFinancialHealthAlService(financialTransactionService);
-    private final FinancialInsightsAlService financialInsightsAlService = new MockFinancialInsightsAlService(financialTransactionService);
-    private final PortfolioIntelligenceAlService portfolioIntelligenceAlService = new MockPortfolioIntelligenceAlService(financialTransactionService, "mock");
+    // --- Services ---
+    private final MockTransactionAnalysisAlService transactionAnalysisAlService = new MockTransactionAnalysisAlService();
+    private final FinancialTransactionService financialTransactionService;
+    private final TransactionQueryService transactionQueryService;
+    private final FinancialHealthAlService financialHealthAlService;
+    private final FinancialInsightsAlService financialInsightsAlService;
+    private final PortfolioIntelligenceAlService portfolioIntelligenceAlService;
 
-    // --- User ID (Hardcoded for demo) ---
+    // --- User ID ---
     private final String currentUserId = "user123";
 
     // --- GUI Components ---
@@ -41,6 +41,15 @@ public class DeepManageApp extends JFrame {
     private JPanel sidebarPanel;
 
     public DeepManageApp() {
+        // 构建依赖链，避免循环依赖
+        this.financialTransactionService = new FinancialTransactionServiceImpl(transactionAnalysisAlService);
+        this.transactionAnalysisAlService.setFinancialTransactionService(financialTransactionService);
+
+        this.transactionQueryService = new TransactionQueryServiceImpl(financialTransactionService);
+        this.financialHealthAlService = new MockFinancialHealthAlService(financialTransactionService);
+        this.financialInsightsAlService = new MockFinancialInsightsAlService(financialTransactionService);
+        this.portfolioIntelligenceAlService = new MockPortfolioIntelligenceAlService(financialTransactionService, "mock");
+
         setTitle("DeepManage - AI Expense Assistant");
         setSize(950, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,8 +60,7 @@ public class DeepManageApp extends JFrame {
         createSidebar();
         createMainContentArea();
 
-        // Select "Transactions" initially
-        selectSidebarButton((JButton) sidebarPanel.getComponent(1)); // Index 1 is Transactions
+        selectSidebarButton((JButton) sidebarPanel.getComponent(1));
         cardLayout.show(mainContentPanel, "Transactions");
     }
 
@@ -65,7 +73,7 @@ public class DeepManageApp extends JFrame {
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
 
-        JPanel iconsPanel = new JPanel(); // Placeholder
+        JPanel iconsPanel = new JPanel();
         iconsPanel.setOpaque(false);
 
         topBarPanel.add(titleLabel, BorderLayout.WEST);
@@ -84,10 +92,7 @@ public class DeepManageApp extends JFrame {
                 "Dashboard", "Transactions", "Financial Health", "Categorization",
                 "Insights", "Portfolio", "Reports", "Settings"
         };
-        String[] panelNames = { // Must match names used in createMainContentArea
-                "Dashboard", "Transactions", "Financial Health", "Categorization",
-                "Insights", "Portfolio", "Reports", "Settings"
-        };
+        String[] panelNames = sidebarItems;
 
         for (int i = 0; i < sidebarItems.length; i++) {
             JButton button = createSidebarButton(sidebarItems[i]);
@@ -137,36 +142,23 @@ public class DeepManageApp extends JFrame {
         mainContentPanel = new JPanel(cardLayout);
         mainContentPanel.setBackground(COLOR_MAIN_BACKGROUND);
 
-        // Instantiate UI panels and add them to CardLayout
-        // Pass required services and user ID
         mainContentPanel.add(new Module1Panel(financialTransactionService), "Transactions");
         mainContentPanel.add(new Module2Panel(financialHealthAlService, currentUserId), "Financial Health");
         mainContentPanel.add(new Module3Panel(transactionQueryService, transactionAnalysisAlService, currentUserId), "Categorization");
         mainContentPanel.add(new Module4Panel(financialInsightsAlService, currentUserId), "Insights");
         mainContentPanel.add(new Module5Panel(portfolioIntelligenceAlService), "Portfolio");
 
-        // Add placeholder panels if desired
-        // JPanel placeholderPanel = new JPanel();
-        // placeholderPanel.add(new JLabel("Dashboard Feature Coming Soon"));
-        // placeholderPanel.setBackground(COLOR_MAIN_BACKGROUND);
-        // mainContentPanel.add(placeholderPanel, "Dashboard");
-        // mainContentPanel.add(new JPanel(), "Reports"); // Empty placeholders
-        // mainContentPanel.add(new JPanel(), "Settings");
-
         add(mainContentPanel, BorderLayout.CENTER);
     }
 
-    // --- Helper Methods (Optional: Dialog wrappers) ---
-    // These could be static methods in a utility class too
     public static void showInfoDialog(Component parent, String message) {
         JOptionPane.showMessageDialog(parent, message, "Information", JOptionPane.INFORMATION_MESSAGE);
     }
+
     public static void showErrorDialog(Component parent, String message) {
         JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-
-    // --- Main Method ---
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

@@ -103,7 +103,7 @@ public class MockPortfolioIntelligenceAlService implements PortfolioIntelligence
         }
     }
 
-    // 辅助方法：将投资组合构成转换为适合prompt的字符串 (保持不变)
+    // 辅助方法：将投资组合构成转换为适合prompt的字符串 
     private String formatPortfolioCompositionForPrompt(Map<String, BigDecimal> portfolioComposition) {
         if (portfolioComposition == null || portfolioComposition.isEmpty()) {
             return "Portfolio composition data is missing or empty.";
@@ -114,7 +114,7 @@ public class MockPortfolioIntelligenceAlService implements PortfolioIntelligence
                         .collect(Collectors.joining("\n"));
     }
 
-    // 辅助方法：将历史业绩数据转换为适合prompt的字符串 (保持不变)
+    // 辅助方法：将历史业绩数据转换为适合prompt的字符串 
     private String formatHistoricalPerformanceForPrompt(Map<LocalDate, BigDecimal> portfolioHistory, Map<String, Map<LocalDate, BigDecimal>> benchmarkHistory) {
         StringBuilder sb = new StringBuilder();
         if (portfolioHistory != null && !portfolioHistory.isEmpty()) {
