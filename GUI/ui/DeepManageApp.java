@@ -3,6 +3,8 @@ package ui;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.imageio.ImageIO;
+import java.io.IOException;
 
 import mock.*;
 import real.FinancialTransactionServiceImpl;
@@ -11,17 +13,34 @@ import service.*;
 public class DeepManageApp extends JFrame {
 
     // --- Color Palette ---
-    public static final Color COLOR_TOP_BAR = new Color(0x5DADE2);
-    public static final Color COLOR_SIDEBAR_BACKGROUND = new Color(0x2C3E50);
-    public static final Color COLOR_SIDEBAR_TEXT = Color.WHITE;
-    public static final Color COLOR_SIDEBAR_SELECTION = new Color(0x3498DB);
-    public static final Color COLOR_MAIN_BACKGROUND = Color.WHITE;
-    public static final Color COLOR_BUTTON_TEXT = Color.BLACK;
-    public static final Border SIDEBAR_BUTTON_BORDER = BorderFactory.createEmptyBorder(10, 15, 10, 15);
-    public static final Border MAIN_PANEL_BORDER = BorderFactory.createEmptyBorder(20, 20, 20, 20);
-    public static final Border MAIN_PANEL_HEADER_BORDER = BorderFactory.createEmptyBorder(0, 0, 15, 0);
-    public static final Border MAIN_PANEL_CONTENT_BORDER = BorderFactory.createEmptyBorder(15, 0, 0, 0);
-    public static final Border MAIN_PANEL_FOOTER_BORDER = BorderFactory.createEmptyBorder(15, 0, 0, 0);
+    public static final Color COLOR_TOP_BAR = new Color(0x2196F3);  // Modern blue
+    public static final Color COLOR_SIDEBAR_BACKGROUND = new Color(0x1A237E);  // Deep blue
+    public static final Color COLOR_SIDEBAR_TEXT = new Color(0xFFFFFF);
+    public static final Color COLOR_SIDEBAR_SELECTION = new Color(0x3949AB);  // Indigo
+    public static final Color COLOR_MAIN_BACKGROUND = new Color(0xF5F5F5);  // Light gray
+    public static final Color COLOR_BUTTON_TEXT = new Color(0x212121);  // Dark gray
+    public static final Color COLOR_ACCENT = new Color(0x2196F3);  // Blue accent
+    public static final Color COLOR_SUCCESS = new Color(0x4CAF50);  // Green
+    public static final Color COLOR_ERROR = new Color(0xF44336);  // Red
+    public static final Color COLOR_WARNING = new Color(0xFFC107);  // Amber
+    public static final Color COLOR_INFO = new Color(0x2196F3);  // Blue
+
+    // --- Font Settings ---
+    public static final Font FONT_HEADER = new Font("Segoe UI", Font.BOLD, 18);
+    public static final Font FONT_SUBHEADER = new Font("Segoe UI", Font.BOLD, 14);
+    public static final Font FONT_NORMAL = new Font("Segoe UI", Font.PLAIN, 12);
+    public static final Font FONT_BUTTON = new Font("Segoe UI", Font.PLAIN, 13);
+
+    // --- Border Settings ---
+    public static final Border SIDEBAR_BUTTON_BORDER = BorderFactory.createEmptyBorder(12, 20, 12, 20);
+    public static final Border MAIN_PANEL_BORDER = BorderFactory.createEmptyBorder(25, 25, 25, 25);
+    public static final Border MAIN_PANEL_HEADER_BORDER = BorderFactory.createEmptyBorder(0, 0, 20, 0);
+    public static final Border MAIN_PANEL_CONTENT_BORDER = BorderFactory.createEmptyBorder(20, 0, 0, 0);
+    public static final Border MAIN_PANEL_FOOTER_BORDER = BorderFactory.createEmptyBorder(20, 0, 0, 0);
+    public static final Border ROUNDED_BORDER = BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(0xE0E0E0), 1),
+        BorderFactory.createEmptyBorder(8, 12, 8, 12)
+    );
 
     // --- Services ---
     private final MockTransactionAnalysisAlService transactionAnalysisAlService = new MockTransactionAnalysisAlService();
@@ -39,6 +58,7 @@ public class DeepManageApp extends JFrame {
     private CardLayout cardLayout;
     private JButton selectedSidebarButton = null;
     private JPanel sidebarPanel;
+    private Image decorativeIcon;
 
     public DeepManageApp() {
         // 构建依赖链，避免循环依赖
@@ -56,6 +76,12 @@ public class DeepManageApp extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
+        try {
+            decorativeIcon = ImageIO.read(getClass().getResource("/ui/finance_ai_decor.png"));
+        } catch (IOException | IllegalArgumentException e) {
+            decorativeIcon = null;
+        }
+
         createTopBar();
         createSidebar();
         createMainContentArea();
@@ -67,17 +93,24 @@ public class DeepManageApp extends JFrame {
     private void createTopBar() {
         JPanel topBarPanel = new JPanel(new BorderLayout());
         topBarPanel.setBackground(COLOR_TOP_BAR);
-        topBarPanel.setPreferredSize(new Dimension(getWidth(), 40));
+        topBarPanel.setPreferredSize(new Dimension(getWidth(), 50));
 
         JLabel titleLabel = new JLabel(" DeepManage");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        titleLabel.setFont(FONT_HEADER);
         titleLabel.setForeground(Color.WHITE);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        titleLabel.setOpaque(false);
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setOpaque(false);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
 
-        JPanel iconsPanel = new JPanel();
-        iconsPanel.setOpaque(false);
+        JLabel iconLabel = new JLabel("💡");
+        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 32));
+        iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        iconLabel.setForeground(Color.WHITE);
 
-        topBarPanel.add(titleLabel, BorderLayout.WEST);
-        topBarPanel.add(iconsPanel, BorderLayout.EAST);
+        topBarPanel.add(titlePanel, BorderLayout.WEST);
+        topBarPanel.add(iconLabel, BorderLayout.EAST);
 
         add(topBarPanel, BorderLayout.NORTH);
     }
@@ -124,8 +157,24 @@ public class DeepManageApp extends JFrame {
         button.setContentAreaFilled(false);
         button.setOpaque(true);
         button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, button.getPreferredSize().height + 10));
-        button.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, button.getPreferredSize().height + 15));
+        button.setFont(FONT_BUTTON);
+        
+        // Add hover effect
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                if (button != selectedSidebarButton) {
+                    button.setBackground(COLOR_SIDEBAR_SELECTION);
+                }
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                if (button != selectedSidebarButton) {
+                    button.setBackground(COLOR_SIDEBAR_BACKGROUND);
+                }
+            }
+        });
+        
         return button;
     }
 
@@ -140,7 +189,8 @@ public class DeepManageApp extends JFrame {
     private void createMainContentArea() {
         cardLayout = new CardLayout();
         mainContentPanel = new JPanel(cardLayout);
-        mainContentPanel.setBackground(COLOR_MAIN_BACKGROUND);
+        mainContentPanel.setOpaque(true);
+        mainContentPanel.setBackground(Color.WHITE);
 
         mainContentPanel.add(new Module1Panel(financialTransactionService), "Transactions");
         mainContentPanel.add(new Module2Panel(financialHealthAlService, currentUserId), "Financial Health");
