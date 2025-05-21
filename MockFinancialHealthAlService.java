@@ -30,19 +30,48 @@ public class MockFinancialHealthAlService implements FinancialHealthAlService {
     @Override
     public Map<String, BigDecimal> recommendBudget(String userId) throws AlException {
         System.out.println("[DeepSeek] Recommending budget for user: " + userId);
+
+        // 1. 获取所有交易数据
+        List<TransactionData> allTransactions = financialTransactionService.getAllTransactions();
+        String transactionDataJson = "";
+        String dataGuidance;
+        BigDecimal totalCurrentSpending = BigDecimal.ZERO;
+
+        if (allTransactions != null && !allTransactions.isEmpty()) {
+            transactionDataJson = buildDeepSeekRequest(allTransactions);
+            for (TransactionData t : allTransactions) {
+                totalCurrentSpending = totalCurrentSpending.add(t.getAmount());
+            }
+            totalCurrentSpending = totalCurrentSpending.setScale(2, RoundingMode.HALF_UP); // Ensure 2 decimal places for the total
+
+            System.out.println("[DeepSeek] Including transaction data for budget recommendation for user: " + userId + ". Total current spending: " + totalCurrentSpending);
+            dataGuidance = String.format(
+                "Please analyze the user's past spending based on the following transaction data. The user's total current spending, derived from this data, is $%.2f. " +
+                "Your goal is to propose an OPTIMIZED monthly budget by REALLOCATING this exact total sum of $%.2f across the **existing spending categories present in the data.** " +
+                "This means the sum of all your recommended budget amounts for each category must precisely equal $%.2f. " +
+                "Actively reallocate funds: if you identify that spending in one category (e.g., 'Shopping') is disproportionately high, recommend a REDUCED amount for it, " +
+                "and reallocate those saved funds to other beneficial categories (e.g., increasing 'Dining' or suggesting a 'Savings' category if not present but appropriate, though prioritize existing categories first). " +
+                "The final output should be a list of all original spending categories present in the data, each with your new, ADJUSTED recommended monthly budget amount. " +
+                "Do not introduce new categories not found in the provided data unless explicitly suggesting a 'Savings' category with reallocated funds. Ensure the total still sums to $%.2f. " +
+                "Focus on providing actionable advice through these reallocations while maintaining the original total spending amount. " +
+                "Here is the transaction data:\n%s",
+                totalCurrentSpending, totalCurrentSpending, totalCurrentSpending, totalCurrentSpending, // Repeating totalCurrentSpending for all format specifiers
+                transactionDataJson
+            );
+        } else {
+            System.out.println("[DeepSeek] No transaction data found. Proceeding with general budget recommendation for user: " + userId);
+            dataGuidance = "Since no specific transaction data is provided, recommend a general monthly budget for at least 5 common spending categories. Base this on typical financial advice.";
+        }
         
         // Prompt for budget recommendation
-        // No transaction data needed for a general recommendation as per current logic
-        // String transactionDataJson = buildDeepSeekRequest(financialTransactionService.getAllTransactions()); // If needed
-        
         String userPromptForBudget = String.format(
-            "As a financial advisor, recommend a general monthly budget for a user (ID: %s). " +
-            "Please list at least 5 common spending categories and their recommended amounts in USD. " +
-            "Output each category and its amount on a new line, strictly in the format 'Category Name: AMOUNT'. " +
-            "For example: 'Dining: 500.00'. " +
+            "As a financial advisor, your task is to recommend a monthly budget for user (ID: %s). %s " + // dataGuidance is inserted here
+            "Output each category and its recommended monthly budget amount in USD, strictly in the format 'Category Name: AMOUNT'. " +
+            "For example: 'Groceries: 350.00'. " +
             "Ensure amounts are numbers only (digits and at most one decimal point). " +
             "Do not include any introductory or concluding sentences, just the list of categories and amounts.",
-            userId
+            userId,
+            dataGuidance
         );
 
         try {
@@ -66,6 +95,16 @@ public class MockFinancialHealthAlService implements FinancialHealthAlService {
             System.out.println("[DeepSeek] No available savings to allocate for user: " + userId);
             return Map.of("Info", BigDecimal.ZERO); // Or an empty map, or throw an error
         }
+
+        // 1. 获取所有交易数据
+        List<TransactionData> allTransactions = financialTransactionService.getAllTransactions();
+        String transactionDataJson = "";
+        if (allTransactions != null && !allTransactions.isEmpty()) {
+            transactionDataJson = buildDeepSeekRequest(allTransactions);
+            System.out.println("[DeepSeek] Including transaction data for savings allocation for user: " + userId);
+        } else {
+            System.out.println("[DeepSeek] No transaction data found. Proceeding with general savings allocation for user: " + userId);
+        }
         
         // Prompt for savings allocation
         String userPromptForSavings = String.format(
@@ -75,8 +114,12 @@ public class MockFinancialHealthAlService implements FinancialHealthAlService {
             "Output each category and its allocated amount on a new line, strictly in the format 'Category Name: AMOUNT'. " +
             "For example: 'Emergency Fund: %.2f'. " +
             "Ensure amounts are numbers only. " +
-            "Do not include any introductory or concluding sentences, just the list of categories and amounts.",
-            userId, availableSavings, availableSavings.multiply(new BigDecimal("0.4")) // Example amount for prompt
+            "Do not include any introductory or concluding sentences, just the list of categories and amounts." +
+            "%s", // Placeholder for transaction data prompt part
+            userId, availableSavings, availableSavings.multiply(new BigDecimal("0.4")), // Example amount for prompt
+            allTransactions != null && !allTransactions.isEmpty() ?
+                String.format(" Base your recommendations on the user's financial context derived from the following transaction data:\n%s", transactionDataJson) :
+                " Since no specific transaction data is provided, provide a general recommendation based on the available savings amount."
         );
 
         try {
@@ -153,8 +196,9 @@ public class MockFinancialHealthAlService implements FinancialHealthAlService {
 
             String userMessageContent;
             // This check is a temporary workaround. Ideally, callDeepSeek would take the full user message.
-            if (promptInputForUserMessage.startsWith("As a financial advisor, recommend a general monthly budget") ||
-                promptInputForUserMessage.startsWith("A user (ID: ")) { // Crude check for budget/savings prompts
+            if (promptInputForUserMessage.startsWith("As a financial advisor, your task is to recommend a monthly budget for user (ID: ") || // For recommendBudget
+                promptInputForUserMessage.startsWith("A user (ID: ") || // For allocateSavings
+                promptInputForUserMessage.startsWith("As a financial advisor, recommend a general monthly budget")) { // Old general budget prompt, kept for safety
                 userMessageContent = escapedDataForUserPrompt; // The prompt is already fully formed and escaped
             } else { // Original spending patterns logic from user's code
                  userMessageContent = "Based on the following transaction data, generate a short 3-point financial insight summary. " +
