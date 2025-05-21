@@ -1,12 +1,14 @@
 package ui;// Import services and mocks
-import service.*;
-import mock.*;
-// Import UI panels
-
-// Import Swing and AWT classes
+import java.awt.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.*;
+
+import dto.TransactionData;
+import exception.TransactionException;
+import mock.*;
+import real.FinancialTransactionServiceImpl;
+import service.*;
 
 public class DeepManageApp extends JFrame {
 
@@ -21,10 +23,20 @@ public class DeepManageApp extends JFrame {
 
     // --- Services (using Mock implementations) ---
     // Instantiate mock services directly here
-    private final FinancialTransactionService financialTransactionService = new MockFinancialTransactionService();
-    private final FinancialHealthAlService financialHealthAlService = new MockFinancialHealthAlService();
-    private final TransactionAnalysisAlService transactionAnalysisAlService = new MockTransactionAnalysisAlServic();
-    private final TransactionQueryService transactionQueryService = new MockTransactionQueryService();
+    // --- Services (using real implementations) ---
+    // 先实例化AI服务（用你自己的真实实现或MockTransactionAnalysisAlServic）
+    private final TransactionAnalysisAlService transactionAnalysisAlService = new MockTransactionAnalysisAlServic(); // 或真实AI服务
+    // 用AI服务实例化真实的FinancialTransactionServiceImpl
+    private final FinancialTransactionService financialTransactionService = new FinancialTransactionServiceImpl(transactionAnalysisAlService) {
+        @Override
+        public List<TransactionData> getAllTransactions(String userId) throws TransactionException {
+            return List.of();
+        }
+    };
+    // 用真实的FinancialTransactionServiceImpl实例化TransactionQueryServiceImpl
+    private final TransactionQueryService transactionQueryService = new TransactionQueryServiceImpl(financialTransactionService);
+    // 其他服务可以继续用mock
+    private final FinancialHealthAlService financialHealthAlService = new MockFinancialHealthAlService(financialTransactionService);
     private final FinancialInsightsAlService financialInsightsAlService = new MockFinancialInsightsAlService();
     private final PortfolioIntelligenceAlService portfolioIntelligenceAlService = new MockPortfolioIntelligenceAlService();
 
@@ -38,7 +50,7 @@ public class DeepManageApp extends JFrame {
     private JPanel sidebarPanel;
 
     public DeepManageApp() {
-        setTitle("DeepManage - AI Expense Assistant (Mock Demo)");
+        setTitle("DeepManage - AI Expense Assistant");
         setSize(950, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
