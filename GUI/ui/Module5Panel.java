@@ -5,7 +5,13 @@ import service.PortfolioIntelligenceAlService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -27,56 +33,114 @@ public class Module5Panel extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
         JButton evalButton = new JButton("Evaluate Portfolio Allocation");
-        JButton historyButton = new JButton("Analyze Historical Performance");
         buttonPanel.add(evalButton);
-        buttonPanel.add(historyButton);
+
+        // Panel for CSV Import button
+        JPanel importPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        importPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
+        JButton importCsvButton = new JButton("Import Portfolio CSV");
+        importPanel.add(importCsvButton);
+
+        // Adjust layout to include the new importPanel
+        JPanel topControlsPanel = new JPanel(new BorderLayout());
+        topControlsPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
+        topControlsPanel.add(buttonPanel, BorderLayout.NORTH);
+        topControlsPanel.add(importPanel, BorderLayout.SOUTH);
 
         resultArea.setEditable(false);
         resultArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         JScrollPane scrollPane = new JScrollPane(resultArea);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Portfolio Analysis"));
 
-        add(buttonPanel, BorderLayout.NORTH);
+        add(topControlsPanel, BorderLayout.NORTH); // Use the combined panel
         add(scrollPane, BorderLayout.CENTER);
 
         // --- Action Listeners ---
         evalButton.addActionListener(e -> evaluateAllocation());
-        historyButton.addActionListener(e -> analyzeHistory());
+        importCsvButton.addActionListener(e -> importPortfolioCSV());
+    }
+
+    private void importPortfolioCSV() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select Portfolio CSV File");
+        // Optionally set file filters for .csv if needed
+        // Example: fileChooser.setFileFilter(new FileNameExtensionFilter("CSV files", "csv"));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            resultArea.setText("Attempting to import portfolio from: " + selectedFile.getAbsolutePath() + "\n");
+            try (InputStream fileStream = new FileInputStream(selectedFile)) { // Use try-with-resources for the stream
+                portfolioIntelligenceAlService.importPortfolioFromCSV(fileStream);
+                resultArea.append("SUCCESS: Portfolio CSV " + selectedFile.getName() + " processed by service.\n");
+                resultArea.append("Data should now be available for portfolio analysis functions.\n");
+                 JOptionPane.showMessageDialog(this, "Portfolio CSV Import completed for " + selectedFile.getName() + ".", "Import Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (AlException ex) {
+                resultArea.append("ERROR during CSV import (AI Service): " + ex.getMessage() + "\n");
+                JOptionPane.showMessageDialog(this, "Error during CSV import: " + ex.getMessage(), "Import Error (AI Service)", JOptionPane.ERROR_MESSAGE);
+            } catch (FileNotFoundException ex) {
+                resultArea.append("ERROR: Selected file not found: " + selectedFile.getAbsolutePath() + "\n");
+                JOptionPane.showMessageDialog(this, "File not found: " + selectedFile.getName(), "Import Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                resultArea.append("ERROR reading file " + selectedFile.getName() + ": " + ex.getMessage() + "\n");
+                JOptionPane.showMessageDialog(this, "Error reading file: " + ex.getMessage(), "Import Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) { // Catch any other unexpected exceptions
+                resultArea.append("UNEXPECTED ERROR during CSV import: " + ex.getMessage() + "\n");
+                JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + ex.getMessage(), "Import Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace(); // Good for debugging
+            }
+        } else {
+            resultArea.append("CSV import cancelled by user.\n");
+        }
     }
 
     private void evaluateAllocation() {
         resultArea.setText("Evaluating Portfolio Allocation...\n");
-        // Simulate getting current composition (Hardcoded for demo)
-        Map<String, BigDecimal> currentComposition = Map.of(
-                "Stocks", new BigDecimal("0.60"), "Bonds", new BigDecimal("0.25"), "Cash", new BigDecimal("0.15")
-        );
-        resultArea.append("Using Mock Portfolio: Stocks 60%, Bonds 25%, Cash 15%\n---------------------------------------\n");
 
-        new SwingWorker<String, Void>() {
-            @Override protected String doInBackground() throws AlException {
-                return portfolioIntelligenceAlService.evaluatePortfolioAllocation(currentComposition);
+        Map<String, BigDecimal> compositionToEvaluate = portfolioIntelligenceAlService.getLatestImportedPortfolio();
+
+        if (compositionToEvaluate == null || compositionToEvaluate.isEmpty()) {
+            resultArea.append("No portfolio data has been imported. Using default mock portfolio for evaluation.\n");
+            resultArea.append("Default: Stocks 60%, Bonds 25%, Cash 15%\n---------------------------------------\n");
+            // Fallback to default if nothing imported or service returns null/empty
+            compositionToEvaluate = Map.of(
+                    "Stocks", new BigDecimal("0.60"), 
+                    "Bonds", new BigDecimal("0.25"), 
+                    "Cash", new BigDecimal("0.15")
+            );
+        } else {
+            resultArea.append("Using imported portfolio data for evaluation:\n");
+            // It's good practice to ensure amounts are scaled for display if they aren't already
+            // However, the mock service already scales them in its output log upon import.
+            compositionToEvaluate.forEach((asset, amount) -> 
+                resultArea.append(String.format("  - %s: %.2f%n", asset, amount))
+            );
+            resultArea.append("---------------------------------------\n");
+        }
+
+        final Map<String, BigDecimal> finalCompositionForWorker = compositionToEvaluate; // effectively final for SwingWorker
+
+        new SwingWorker<Map<String, BigDecimal>, Void>() {
+            @Override protected Map<String, BigDecimal> doInBackground() throws AlException {
+                // Pass the composition (either imported or default) to the service
+                return portfolioIntelligenceAlService.evaluatePortfolioAllocation(finalCompositionForWorker);
             }
             @Override protected void done() {
-                try { resultArea.append("Evaluation Result:\n" + get() + "\n"); }
-                catch (Exception ex) { handleException(ex, "portfolio evaluation"); }
-            }
-        }.execute();
-    }
-
-    private void analyzeHistory() {
-        resultArea.setText("Analyzing Historical Performance...\n");
-        // Simulate getting historical data (Hardcoded/Empty for demo)
-        Map<LocalDate, BigDecimal> portfolioHistory = Map.of( LocalDate.now().minusMonths(3), new BigDecimal("10000"), LocalDate.now().minusMonths(2), new BigDecimal("10500"), LocalDate.now().minusMonths(1), new BigDecimal("10300"), LocalDate.now(), new BigDecimal("10800"));
-        Map<String, Map<LocalDate, BigDecimal>> benchmarkHistory = Map.of( "Nasdaq", Map.of(LocalDate.now().minusMonths(1), new BigDecimal("15000"), LocalDate.now(), new BigDecimal("15500")), "Shanghai 300", Map.of(LocalDate.now().minusMonths(1), new BigDecimal("4000"), LocalDate.now(), new BigDecimal("4100")));
-        resultArea.append("Using Mock Historical Data...\n-----------------------------\n");
-
-        new SwingWorker<String, Void>() {
-            @Override protected String doInBackground() throws AlException {
-                return portfolioIntelligenceAlService.analyzeHistoricalPerformance(portfolioHistory, benchmarkHistory);
-            }
-            @Override protected void done() {
-                try { resultArea.append("Analysis Result:\n" + get() + "\n"); }
-                catch (Exception ex) { handleException(ex, "historical performance analysis"); }
+                try {
+                    Map<String, BigDecimal> suggestedComposition = get(); // Get the Map result
+                    resultArea.append("\n--- AI Suggested Portfolio Allocation (RMB) ---\n");
+                    if (suggestedComposition.isEmpty()) {
+                        resultArea.append("AI did not provide a specific new allocation (perhaps due to input or mock logic).\n");
+                    } else {
+                        suggestedComposition.forEach((asset, amount) -> 
+                            resultArea.append(String.format("  - %s: %.2f%n", asset, amount))
+                        );
+                        // Optional: Calculate and display total of suggested composition to verify
+                        BigDecimal suggestedTotal = suggestedComposition.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+                        resultArea.append(String.format("  Total Suggested Value: %.2f%n", suggestedTotal.setScale(2, RoundingMode.HALF_UP)));
+                    }
+                } catch (Exception ex) { 
+                    handleException(ex, "portfolio evaluation with AI suggestion"); 
+                }
             }
         }.execute();
     }

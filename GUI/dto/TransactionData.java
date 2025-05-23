@@ -8,6 +8,8 @@ public class TransactionData {
     private LocalDate date;
     private String description;
     private String paymentMethod;
+    private String category;
+    private String id;
 
     // Default constructor
     public TransactionData() {}
@@ -21,14 +23,24 @@ public class TransactionData {
     public void setDescription(String description) { this.description = description; }
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public String getCategory() {
+        return category;
+    }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
     @Override
     public String toString() {
-        return "TransactionData{" +
-                "amount=" + amount +
-                ", date=" + date +
-                ", description='" + description + '\'' +
-                ", paymentMethod='" + paymentMethod + '\'' +
-                '}';
+        return String.format("%s | %s | %s | %s | %s", 
+            date, amount, category, description, paymentMethod);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
