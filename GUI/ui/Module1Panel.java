@@ -7,7 +7,6 @@ import service.FinancialTransactionService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,11 +20,12 @@ public class Module1Panel extends JPanel {
     private final JTextField descriptionField = new JTextField(25);
     private final JComboBox<String> paymentMethodCombo = new JComboBox<>(new String[]{"Alipay", "WeChat Pay", "Credit Card", "Cash", "Bank Transfer"});
     private final JTextArea resultArea = new JTextArea(5, 50);
+    private final DeepManageApp appReference; // Reference to the main application
 
-    public Module1Panel(FinancialTransactionService service) {
+    public Module1Panel(FinancialTransactionService service, DeepManageApp app) {
         this.financialTransactionService = service;
+        this.appReference = app; // Store the reference
         initComponents();
-        attachListeners();
     }
 
     private void initComponents() {
@@ -163,6 +163,12 @@ public class Module1Panel extends JPanel {
             resultArea.append("SUCCESS: Transaction added with ID: " + newId + "\n");
             JOptionPane.showMessageDialog(this, "Transaction added with ID: " + newId, "Success", JOptionPane.INFORMATION_MESSAGE);
             amountField.setText(""); dateField.setText(""); descriptionField.setText(""); paymentMethodCombo.setSelectedIndex(0);
+            
+            // Refresh dashboard after manual entry too
+            if (appReference != null) {
+                appReference.refreshDashboardData();
+            }
+
         } catch (NumberFormatException | DateTimeParseException ex) {
             resultArea.append("ERROR: Invalid input format.\n");
             JOptionPane.showMessageDialog(this, "Invalid input format:\nAmount must be a number.\nDate must be YYYY-MM-DD.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -182,6 +188,12 @@ public class Module1Panel extends JPanel {
                 int count = financialTransactionService.importTransactions(fileStream);
                 resultArea.append("SUCCESS: Imported " + count + " transactions.\n");
                 JOptionPane.showMessageDialog(this, "Successfully imported " + count + " transactions.", "Import Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                // Refresh dashboard data after successful import
+                if (appReference != null) {
+                    appReference.refreshDashboardData();
+                }
+
             } catch (FileNotFoundException ex) { resultArea.append("ERROR: File not found.\n"); JOptionPane.showMessageDialog(this, "File not found.", "Import Error", JOptionPane.ERROR_MESSAGE);
             } catch (TransactionException ex) { resultArea.append("ERROR: Import failed - " + ex.getMessage() + "\n"); JOptionPane.showMessageDialog(this, "Import Failed: " + ex.getMessage(), "Import Error", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) { resultArea.append("ERROR: Could not read file.\n"); JOptionPane.showMessageDialog(this, "Error reading file: " + ex.getMessage(), "Import Error", JOptionPane.ERROR_MESSAGE); }

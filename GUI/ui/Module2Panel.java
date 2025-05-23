@@ -3,20 +3,24 @@ package ui;
 import exception.AlException;
 import java.awt.*;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import javax.swing.*;
 import service.FinancialHealthAlService;
+// No direct import of DeepManageApp needed if passed as a more generic interface or type,
+// but for direct callback, it's simpler for this example.
 
 public class Module2Panel extends JPanel {
 
     private final FinancialHealthAlService financialHealthAlService;
-    private final String currentUserId; // Assuming user ID is needed
+    private final String currentUserId; 
     private final JTextArea resultArea = new JTextArea(15, 60);
+    private JTextField savingsAmountField; 
+    private final DeepManageApp appReference; // Reference to the main application
 
-    public Module2Panel(FinancialHealthAlService service, String userId) {
+    public Module2Panel(FinancialHealthAlService service, String userId, DeepManageApp app) { // Added DeepManageApp app
         this.financialHealthAlService = service;
         this.currentUserId = userId;
+        this.appReference = app; // Store the reference
         initComponents();
     }
 
@@ -25,28 +29,25 @@ public class Module2Panel extends JPanel {
         setBorder(DeepManageApp.MAIN_PANEL_BORDER);
         setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
 
-        // Create header panel
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
-        headerPanel.setBorder(DeepManageApp.MAIN_PANEL_HEADER_BORDER);
+        JPanel topPanel = new JPanel(new BorderLayout(0, 5)); 
+        topPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
 
-        JLabel titleLabel = new JLabel("Financial Health Analysis");
-        titleLabel.setFont(DeepManageApp.FONT_HEADER);
-        titleLabel.setForeground(DeepManageApp.COLOR_ACCENT);
-        headerPanel.add(titleLabel, BorderLayout.WEST);
-
-        // Create button panel with modern styling
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-
-        JButton budgetButton = createStyledButton("Budget Recommendations");
-        JButton savingsButton = createStyledButton("Savings Allocation");
-        JButton patternsButton = createStyledButton("Spending Patterns");
-
-        buttonPanel.add(budgetButton);
+        JButton savingsButton = new JButton("Get Savings Allocation & Update Goal"); // Clarified button text
         buttonPanel.add(savingsButton);
-        buttonPanel.add(patternsButton);
+
+        topPanel.add(buttonPanel, BorderLayout.NORTH); 
+
+        JPanel savingsInputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        savingsInputPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
+        JLabel savingsLabel = new JLabel("Enter Total Savings Goal (¥):"); // Changed label to reflect it's a goal
+        savingsAmountField = new JTextField(10); 
+        savingsAmountField.setText("0.00"); // Default to 0, or load from appReference.getCurrentGlobalSavingsGoal()
+        savingsInputPanel.add(savingsLabel);
+        savingsInputPanel.add(savingsAmountField);
+
+        topPanel.add(savingsInputPanel, BorderLayout.CENTER); 
 
         // Create results panel
         JPanel resultsPanel = new JPanel(new BorderLayout());
@@ -54,146 +55,72 @@ public class Module2Panel extends JPanel {
         resultsPanel.setBackground(Color.WHITE);
         resultsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "AI Analysis Results", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, DeepManageApp.FONT_SUBHEADER, DeepManageApp.COLOR_ACCENT));
 
-        resultArea.setEditable(false);
-        resultArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
-        resultArea.setBackground(Color.WHITE);
-        resultArea.setForeground(Color.BLACK);
-        resultArea.setMargin(new Insets(10, 10, 10, 10));
-        
-        JScrollPane scrollPane = new JScrollPane(resultArea);
-        scrollPane.setBorder(null);
-        resultsPanel.add(scrollPane, BorderLayout.CENTER);
+        add(topPanel, BorderLayout.NORTH); 
+        add(scrollPane, BorderLayout.CENTER);
 
-        // Add all panels to main panel
-        add(headerPanel, BorderLayout.NORTH);
-        add(buttonPanel, BorderLayout.CENTER);
-        add(resultsPanel, BorderLayout.SOUTH);
-
-        // --- Action Listeners ---
-        budgetButton.addActionListener(e -> loadBudgetRecommendations());
-        savingsButton.addActionListener(e -> loadSavingsAllocation());
-        patternsButton.addActionListener(e -> loadSpendingPatterns());
-    }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(DeepManageApp.FONT_BUTTON);
-        button.setForeground(Color.WHITE);
-        button.setBackground(DeepManageApp.COLOR_ACCENT);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setOpaque(true);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        
-        // Add hover effect
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(DeepManageApp.COLOR_ACCENT.darker());
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(DeepManageApp.COLOR_ACCENT);
+        savingsButton.addActionListener(e -> {
+            loadSavingsAllocation();
+            // Also update the global savings goal via appReference
+            try {
+                BigDecimal goalAmount = new BigDecimal(savingsAmountField.getText());
+                if (goalAmount.compareTo(BigDecimal.ZERO) >= 0) {
+                    appReference.updateUserSavingsGoal(goalAmount);
+                }
+            } catch (NumberFormatException ex) {
+                // Error already handled in loadSavingsAllocation, but good to be safe
+                System.err.println("Invalid number format in savings field when trying to update global goal.");
             }
         });
-        
-        return button;
-    }
-
-    private void loadBudgetRecommendations() {
-        resultArea.setText("Loading Budget Recommendations...\n");
-        resultArea.setForeground(DeepManageApp.COLOR_INFO);
-        
-        new SwingWorker<Map<String, BigDecimal>, Void>() {
-            @Override
-            protected Map<String, BigDecimal> doInBackground() throws AlException {
-                return financialHealthAlService.recommendBudget(currentUserId);
-            }
-            @Override
-            protected void done() {
-                try {
-                    Map<String, BigDecimal> recommendations = get();
-                    resultArea.setForeground(Color.BLACK);
-                    resultArea.append("\nAI Budget Recommendations:\n");
-                    resultArea.append("---------------------------\n");
-                    // Align output: category left, colon, amount right
-                    int maxLen = 0;
-                    for (String category : recommendations.keySet()) {
-                        if (category.length() > maxLen) maxLen = category.length();
-                    }
-                    for (Map.Entry<String, BigDecimal> entry : recommendations.entrySet()) {
-                        String category = entry.getKey();
-                        BigDecimal amount = entry.getValue();
-                        resultArea.append(String.format("%-" + (maxLen + 2) + "s: ¥ %,10.2f\n", category, amount));
-                    }
-                } catch (Exception ex) {
-                    Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
-                    resultArea.setForeground(DeepManageApp.COLOR_ERROR);
-                    resultArea.append("ERROR loading budget recommendations: " + cause.getMessage() + "\n");
-                    JOptionPane.showMessageDialog(Module2Panel.this, "Error: " + cause.getMessage(), "AI Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }.execute();
     }
 
     private void loadSavingsAllocation() {
         resultArea.setText("Loading Savings Allocation...\n");
-        resultArea.setForeground(DeepManageApp.COLOR_INFO);
-        BigDecimal availableSavings = new BigDecimal("5000.00"); // Mock value
-        resultArea.append("Assuming available savings: ¥" + availableSavings + "\n");
+
+        String savingsText = savingsAmountField.getText();
+        BigDecimal availableSavings; // This is interpreted as the total savings goal now
+        try {
+            availableSavings = new BigDecimal(savingsText);
+            if (availableSavings.compareTo(BigDecimal.ZERO) < 0) {
+                JOptionPane.showMessageDialog(this, "Savings goal amount cannot be negative.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                resultArea.append("ERROR: Savings goal amount cannot be negative.\n");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid savings goal amount entered. Please enter a valid number.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            resultArea.append("ERROR: Invalid savings goal amount format. Please enter a number (e.g., 5000.00).\n");
+            return;
+        }
+        
+        // Update the global savings goal in DeepManageApp
+        // This is now also done in the action listener directly for immediate feedback after input, 
+        // but can be kept here if the AI call is also based on this specific input amount.
+        // appReference.updateUserSavingsGoal(availableSavings); 
+
+        resultArea.append("Processing with available savings goal: ¥" + availableSavings.setScale(2, BigDecimal.ROUND_HALF_UP) + "\n");
+
+        final BigDecimal finalAvailableSavings = availableSavings; 
 
         new SwingWorker<Map<String, BigDecimal>, Void>() {
             @Override
             protected Map<String, BigDecimal> doInBackground() throws AlException {
-                return financialHealthAlService.allocateSavings(currentUserId, availableSavings);
+                // The AI service might interpret this as amount *to be allocated*
+                // If the intent is for the AI to work with a *total goal* and suggest how to reach it,
+                // the prompt to the AI service might need adjustment.
+                // For now, it's passed as `availableSavings` to the existing method.
+                return financialHealthAlService.allocateSavings(currentUserId, finalAvailableSavings);
             }
             @Override
             protected void done() {
                 try {
                     Map<String, BigDecimal> allocation = get();
-                    resultArea.setForeground(Color.BLACK);
-                    resultArea.append("\nAI Savings Allocation Suggestion:\n");
-                    resultArea.append("-------------------------------\n");
-                    // Align output: goal left, colon, amount right
-                    int maxLen = 0;
-                    for (String goal : allocation.keySet()) {
-                        if (goal.length() > maxLen) maxLen = goal.length();
-                    }
-                    for (Map.Entry<String, BigDecimal> entry : allocation.entrySet()) {
-                        String goal = entry.getKey();
-                        BigDecimal amount = entry.getValue();
-                        resultArea.append(String.format("%-" + (maxLen + 2) + "s: ¥ %,10.2f\n", goal, amount));
-                    }
+                    resultArea.append("AI Savings Allocation Suggestion (based on input amount):\n----------------------------------------------------\n");
+                    allocation.forEach((goal, amount) ->
+                            resultArea.append(String.format("%-25s: ¥ %,10.2f\n", goal, amount))
+                    );
                 } catch (Exception ex) {
                     Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
                     resultArea.setForeground(DeepManageApp.COLOR_ERROR);
                     resultArea.append("ERROR loading savings allocation: " + cause.getMessage() + "\n");
-                    JOptionPane.showMessageDialog(Module2Panel.this, "Error: " + cause.getMessage(), "AI Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }.execute();
-    }
-
-    private void loadSpendingPatterns() {
-        resultArea.setText("Detecting Spending Patterns...\n");
-        resultArea.setForeground(DeepManageApp.COLOR_INFO);
-        
-        new SwingWorker<List<String>, Void>() {
-            @Override
-            protected List<String> doInBackground() throws AlException {
-                return financialHealthAlService.detectSpendingPatterns(currentUserId);
-            }
-            @Override
-            protected void done() {
-                try {
-                    List<String> patterns = get();
-                    resultArea.setForeground(Color.BLACK);
-                    resultArea.append("\nDetected Spending Patterns:\n");
-                    resultArea.append("---------------------------\n");
-                    patterns.forEach(pattern -> resultArea.append("• " + pattern + "\n"));
-                } catch (Exception ex) {
-                    Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
-                    resultArea.setForeground(DeepManageApp.COLOR_ERROR);
-                    resultArea.append("ERROR detecting spending patterns: " + cause.getMessage() + "\n");
                     JOptionPane.showMessageDialog(Module2Panel.this, "Error: " + cause.getMessage(), "AI Error", JOptionPane.ERROR_MESSAGE);
                 }
             }

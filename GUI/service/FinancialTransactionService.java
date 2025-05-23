@@ -9,5 +9,6 @@ public interface FinancialTransactionService {
     String addTransaction(TransactionData data) throws TransactionException;
     int importTransactions(InputStream fileStream) throws TransactionException;
     List<TransactionData> getAllTransactions();
-    List<TransactionData> getAllTransactionsByUserId(String userId);
+
+    List<TransactionData> getAllTransactions(String userId) throws TransactionException;
 }

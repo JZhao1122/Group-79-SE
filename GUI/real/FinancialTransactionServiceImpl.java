@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FinancialTransactionServiceImpl implements FinancialTransactionService {
+public abstract class FinancialTransactionServiceImpl implements FinancialTransactionService {
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -130,9 +130,9 @@ public class FinancialTransactionServiceImpl implements FinancialTransactionServ
     public List<TransactionData> getAllTransactions() {
         return new ArrayList<>(transactionList);
     }
-
+    
     @Override
-    public List<TransactionData> getAllTransactionsByUserId(String userId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getAllTransactionsByUserId'");
+    public List<TransactionData> getAllTransactions(String userId) throws TransactionException {
+        return new ArrayList<>(transactionList);
     }
 }
