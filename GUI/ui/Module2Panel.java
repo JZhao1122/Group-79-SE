@@ -25,8 +25,8 @@ public class Module2Panel extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new BorderLayout(15, 15));
-        setBorder(DeepManageApp.MAIN_PANEL_BORDER);
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
 
         JPanel topPanel = new JPanel(new BorderLayout(0, 5)); 
@@ -49,11 +49,10 @@ public class Module2Panel extends JPanel {
 
         topPanel.add(savingsInputPanel, BorderLayout.CENTER); 
 
-        // Create results panel
-        JPanel resultsPanel = new JPanel(new BorderLayout());
-        resultsPanel.setOpaque(true);
-        resultsPanel.setBackground(Color.WHITE);
-        resultsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "AI Analysis Results", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, DeepManageApp.FONT_SUBHEADER, DeepManageApp.COLOR_ACCENT));
+        resultArea.setEditable(false);
+        resultArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        JScrollPane scrollPane = new JScrollPane(resultArea);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("AI Analysis Results"));
 
         add(topPanel, BorderLayout.NORTH); 
         add(scrollPane, BorderLayout.CENTER);
@@ -119,7 +118,6 @@ public class Module2Panel extends JPanel {
                     );
                 } catch (Exception ex) {
                     Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
-                    resultArea.setForeground(DeepManageApp.COLOR_ERROR);
                     resultArea.append("ERROR loading savings allocation: " + cause.getMessage() + "\n");
                     JOptionPane.showMessageDialog(Module2Panel.this, "Error: " + cause.getMessage(), "AI Error", JOptionPane.ERROR_MESSAGE);
                 }

@@ -26,22 +26,11 @@ public class Module5Panel extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new BorderLayout(15, 15));
-        setBorder(DeepManageApp.MAIN_PANEL_BORDER);
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
 
-        // Create header panel
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
-        headerPanel.setBorder(DeepManageApp.MAIN_PANEL_HEADER_BORDER);
-
-        JLabel titleLabel = new JLabel("Portfolio Intelligence");
-        titleLabel.setFont(DeepManageApp.FONT_HEADER);
-        titleLabel.setForeground(DeepManageApp.COLOR_ACCENT);
-        headerPanel.add(titleLabel, BorderLayout.WEST);
-
-        // Create button panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
         JButton evalButton = new JButton("Evaluate Portfolio Allocation");
         buttonPanel.add(evalButton);
@@ -58,11 +47,10 @@ public class Module5Panel extends JPanel {
         topControlsPanel.add(buttonPanel, BorderLayout.NORTH);
         topControlsPanel.add(importPanel, BorderLayout.SOUTH);
 
-        // Create results panel
-        JPanel resultsPanel = new JPanel(new BorderLayout());
-        resultsPanel.setOpaque(true);
-        resultsPanel.setBackground(Color.WHITE);
-        resultsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Portfolio Analysis", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, DeepManageApp.FONT_SUBHEADER, DeepManageApp.COLOR_ACCENT));
+        resultArea.setEditable(false);
+        resultArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        JScrollPane scrollPane = new JScrollPane(resultArea);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Portfolio Analysis"));
 
         add(topControlsPanel, BorderLayout.NORTH); // Use the combined panel
         add(scrollPane, BorderLayout.CENTER);
@@ -103,30 +91,6 @@ public class Module5Panel extends JPanel {
         } else {
             resultArea.append("CSV import cancelled by user.\n");
         }
-    }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(DeepManageApp.FONT_BUTTON);
-        button.setForeground(Color.WHITE);
-        button.setBackground(DeepManageApp.COLOR_ACCENT);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setOpaque(true);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        
-        // Add hover effect
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(DeepManageApp.COLOR_ACCENT.darker());
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(DeepManageApp.COLOR_ACCENT);
-            }
-        });
-        
-        return button;
     }
 
     private void evaluateAllocation() {
@@ -183,7 +147,6 @@ public class Module5Panel extends JPanel {
 
     private void handleException(Exception ex, String context) {
         Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
-        resultArea.setForeground(DeepManageApp.COLOR_ERROR);
         resultArea.append("ERROR getting " + context + ": " + cause.getMessage() + "\n");
         JOptionPane.showMessageDialog(this, "Error getting " + context + ": " + cause.getMessage(), "AI Error", JOptionPane.ERROR_MESSAGE);
     }

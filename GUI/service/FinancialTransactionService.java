@@ -10,5 +10,6 @@ public interface FinancialTransactionService {
     int importTransactions(InputStream fileStream) throws TransactionException;
     List<TransactionData> getAllTransactions();
 
+    // --- 新增的 getAllTransactions 方法实现 ---
     List<TransactionData> getAllTransactions(String userId) throws TransactionException;
 }

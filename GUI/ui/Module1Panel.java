@@ -29,70 +29,45 @@ public class Module1Panel extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new BorderLayout(15, 15));
-        setBorder(DeepManageApp.MAIN_PANEL_BORDER);
-        setOpaque(false);
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND); // Use color from Main App
 
         // Manual Entry Form
         JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setOpaque(true);
-        formPanel.setBackground(Color.WHITE);
-        formPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Manual Transaction Entry", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, DeepManageApp.FONT_SUBHEADER, DeepManageApp.COLOR_ACCENT));
-
+        formPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
+        formPanel.setBorder(BorderFactory.createTitledBorder("Manual Transaction Entry"));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Style input fields
-        styleInputField(amountField);
-        styleInputField(dateField);
-        styleInputField(descriptionField);
-        styleComboBox(paymentMethodCombo);
+        paymentMethodCombo.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND); // Style combo box
 
-        // Add form components
-        gbc.gridx = 0; gbc.gridy = 0; 
-        formPanel.add(createLabel("Amount:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 0; 
-        formPanel.add(amountField, gbc);
+        gbc.gridx = 0; gbc.gridy = 0; formPanel.add(new JLabel("Amount:"), gbc);
+        gbc.gridx = 1; gbc.gridy = 0; formPanel.add(amountField, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; formPanel.add(new JLabel("Date (YYYY-MM-DD):"), gbc);
+        gbc.gridx = 1; gbc.gridy = 1; formPanel.add(dateField, gbc);
+        gbc.gridx = 0; gbc.gridy = 2; formPanel.add(new JLabel("Description:"), gbc);
+        gbc.gridx = 1; gbc.gridy = 2; formPanel.add(descriptionField, gbc);
+        gbc.gridx = 0; gbc.gridy = 3; formPanel.add(new JLabel("Payment Method:"), gbc);
+        gbc.gridx = 1; gbc.gridy = 3; formPanel.add(paymentMethodCombo, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 1; 
-        formPanel.add(createLabel("Date (YYYY-MM-DD):"), gbc);
-        gbc.gridx = 1; gbc.gridy = 1; 
-        formPanel.add(dateField, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 2; 
-        formPanel.add(createLabel("Description:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 2; 
-        formPanel.add(descriptionField, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 3; 
-        formPanel.add(createLabel("Payment Method:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 3; 
-        formPanel.add(paymentMethodCombo, gbc);
-
-        JButton saveButton = createStyledButton("Save Transaction");
-        gbc.gridx = 1; gbc.gridy = 4; 
-        gbc.anchor = GridBagConstraints.EAST; 
-        formPanel.add(saveButton, gbc);
+        JButton saveButton = new JButton("Save Manual Transaction");
+        gbc.gridx = 1; gbc.gridy = 4; gbc.anchor = GridBagConstraints.EAST; formPanel.add(saveButton, gbc);
 
         // Import Section
         JPanel importPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        importPanel.setOpaque(true);
-        importPanel.setBackground(Color.WHITE);
-        importPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Import Transactions", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, DeepManageApp.FONT_SUBHEADER, DeepManageApp.COLOR_ACCENT));
-        
-        JButton importButton = createStyledButton("Import CSV/Excel File...");
+        importPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
+        importPanel.setBorder(BorderFactory.createTitledBorder("Import Transactions"));
+        JButton importButton = new JButton("Import CSV/Excel File...");
         importPanel.add(importButton);
 
         // Results Area
         resultArea.setEditable(false);
-        resultArea.setFont(DeepManageApp.FONT_NORMAL);
-        resultArea.setBackground(new Color(0xFFFFFF));
         JScrollPane scrollPane = new JScrollPane(resultArea);
-        scrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Transaction Log", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, DeepManageApp.FONT_SUBHEADER, DeepManageApp.COLOR_ACCENT));
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Log"));
 
-        JPanel bottomArea = new JPanel(new BorderLayout(15, 15));
+        JPanel bottomArea = new JPanel(new BorderLayout());
         bottomArea.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
         bottomArea.add(importPanel, BorderLayout.NORTH);
         bottomArea.add(scrollPane, BorderLayout.CENTER);
@@ -100,50 +75,9 @@ public class Module1Panel extends JPanel {
         add(formPanel, BorderLayout.NORTH);
         add(bottomArea, BorderLayout.CENTER);
 
+        // Attach listeners here or call a separate method
         saveButton.addActionListener(this::saveManualTransaction);
         importButton.addActionListener(this::importFile);
-    }
-
-    private JLabel createLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setFont(DeepManageApp.FONT_NORMAL);
-        return label;
-    }
-
-    private void styleInputField(JTextField field) {
-        field.setFont(DeepManageApp.FONT_NORMAL);
-        field.setBorder(DeepManageApp.ROUNDED_BORDER);
-        field.setBackground(Color.WHITE);
-    }
-
-    private void styleComboBox(JComboBox<?> comboBox) {
-        comboBox.setFont(DeepManageApp.FONT_NORMAL);
-        comboBox.setBackground(Color.WHITE);
-        comboBox.setBorder(DeepManageApp.ROUNDED_BORDER);
-    }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(DeepManageApp.FONT_BUTTON);
-        button.setForeground(DeepManageApp.COLOR_BUTTON_TEXT);
-        button.setBackground(DeepManageApp.COLOR_ACCENT);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setOpaque(true);
-        
-        // Add hover effect
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(DeepManageApp.COLOR_ACCENT.darker());
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(DeepManageApp.COLOR_ACCENT);
-            }
-        });
-        
-        return button;
     }
 
     // Separate listener attachment logic if preferred

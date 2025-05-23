@@ -16,18 +16,14 @@ import service.*;
 
 public class DeepManageApp extends JFrame {
 
-    // --- Color Palette ---
-    public static final Color COLOR_TOP_BAR = new Color(0x2196F3);  // Modern blue
-    public static final Color COLOR_SIDEBAR_BACKGROUND = new Color(0x1A237E);  // Deep blue
-    public static final Color COLOR_SIDEBAR_TEXT = new Color(0xFFFFFF);
-    public static final Color COLOR_SIDEBAR_SELECTION = new Color(0x3949AB);  // Indigo
-    public static final Color COLOR_MAIN_BACKGROUND = new Color(0xF5F5F5);  // Light gray
-    public static final Color COLOR_BUTTON_TEXT = new Color(0x212121);  // Dark gray
-    public static final Color COLOR_ACCENT = new Color(0x2196F3);  // Blue accent
-    public static final Color COLOR_SUCCESS = new Color(0x4CAF50);  // Green
-    public static final Color COLOR_ERROR = new Color(0xF44336);  // Red
-    public static final Color COLOR_WARNING = new Color(0xFFC107);  // Amber
-    public static final Color COLOR_INFO = new Color(0x2196F3);  // Blue
+    // --- Color Palette (Centralized for UI consistency) ---
+    public static final Color COLOR_TOP_BAR = new Color(0x5DADE2); // Light Blueish
+    public static final Color COLOR_SIDEBAR_BACKGROUND = new Color(0x2C3E50); // Dark Blue/Gray
+    public static final Color COLOR_SIDEBAR_TEXT = Color.WHITE;
+    public static final Color COLOR_SIDEBAR_SELECTION = new Color(0x3498DB); // Brighter Blue for selection
+    public static final Color COLOR_MAIN_BACKGROUND = Color.WHITE; // White or new Color(0xF5F5F5) for light gray
+    public static final Color COLOR_BUTTON_TEXT = Color.BLACK;
+    public static final Border SIDEBAR_BUTTON_BORDER = BorderFactory.createEmptyBorder(10, 15, 10, 15); // Padding
 
     // --- User Service ---
     private final UserService userService = new MockUserService();
@@ -137,16 +133,11 @@ public class DeepManageApp extends JFrame {
     private void createTopBar() {
         JPanel topBarPanel = new JPanel(new BorderLayout());
         topBarPanel.setBackground(COLOR_TOP_BAR);
-        topBarPanel.setPreferredSize(new Dimension(getWidth(), 50));
+        topBarPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
         JLabel titleLabel = new JLabel(" DeepManage - " + (currentUser != null ? currentUser.getUsername() : ""));
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
         titleLabel.setForeground(Color.WHITE);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        titleLabel.setOpaque(false);
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        titlePanel.setOpaque(false);
-        titlePanel.add(titleLabel, BorderLayout.CENTER);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.setOpaque(false);
@@ -228,24 +219,8 @@ public class DeepManageApp extends JFrame {
         button.setContentAreaFilled(false);
         button.setOpaque(true);
         button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, button.getPreferredSize().height + 15));
-        button.setFont(FONT_BUTTON);
-        
-        // Add hover effect
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                if (button != selectedSidebarButton) {
-                    button.setBackground(COLOR_SIDEBAR_SELECTION);
-                }
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                if (button != selectedSidebarButton) {
-                    button.setBackground(COLOR_SIDEBAR_BACKGROUND);
-                }
-            }
-        });
-        
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, button.getPreferredSize().height + 10));
+        button.setFont(new Font("SansSerif", Font.PLAIN, 14));
         return button;
     }
 
@@ -260,8 +235,7 @@ public class DeepManageApp extends JFrame {
     private void createMainContentArea() {
         cardLayout = new CardLayout();
         mainContentPanel = new JPanel(cardLayout);
-        mainContentPanel.setOpaque(true);
-        mainContentPanel.setBackground(Color.WHITE);
+        mainContentPanel.setBackground(COLOR_MAIN_BACKGROUND);
 
         this.dashboardPanelInstance = new DashboardPanel(financialTransactionService, currentUserId, this); // Pass `this` for callback, and store instance
         mainContentPanel.add(this.dashboardPanelInstance, "Dashboard");
@@ -297,14 +271,17 @@ public class DeepManageApp extends JFrame {
         }
     }
 
+    // --- Helper Methods (Optional: Dialog wrappers) ---
+    // These could be static methods in a utility class too
     public static void showInfoDialog(Component parent, String message) {
         JOptionPane.showMessageDialog(parent, message, "Information", JOptionPane.INFORMATION_MESSAGE);
     }
-
     public static void showErrorDialog(Component parent, String message) {
         JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+
+    // --- Main Method ---
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

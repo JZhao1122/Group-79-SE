@@ -133,6 +133,8 @@ public abstract class FinancialTransactionServiceImpl implements FinancialTransa
     
     @Override
     public List<TransactionData> getAllTransactions(String userId) throws TransactionException {
+        // 这个方法直接返回所有交易数据，不需要过滤userId
+        // 在实际生产环境中，应该根据userId过滤交易数据
         return new ArrayList<>(transactionList);
     }
 }
