@@ -32,7 +32,7 @@ public abstract class FinancialTransactionServiceImpl implements FinancialTransa
     @Override
     public String addTransaction(TransactionData transaction) throws TransactionException {
         validateTransaction(transaction);
-        // 自动AI分类
+        // AI classification
         try {
             TransactionDetails details = new TransactionDetails();
             details.setDescription(transaction.getDescription());
@@ -41,7 +41,7 @@ public abstract class FinancialTransactionServiceImpl implements FinancialTransa
             String aiCategory = aiService.categorizeTransaction(details);
             transaction.setCategory(aiCategory);
         } catch (AlException e) {
-            throw new TransactionException("AI分类失败: " + e.getMessage(), e);
+            throw new TransactionException("AI classification failed: " + e.getMessage(), e);
         }
         String id = "TXN-" + System.currentTimeMillis();
         transaction.setId(id);
@@ -76,7 +76,7 @@ public abstract class FinancialTransactionServiceImpl implements FinancialTransa
                         String aiCategory = aiService.categorizeTransaction(details);
                         transaction.setCategory(aiCategory);
                     } catch (AlException e) {
-                        System.err.printf("Line %d: AI分类失败 - %s%n", lineNumber, e.getMessage());
+                        System.err.printf("Line %d: AI classification failed - %s%n", lineNumber, e.getMessage());
                     }
                     addTransaction(transaction);
                     successCount++;
@@ -133,8 +133,8 @@ public abstract class FinancialTransactionServiceImpl implements FinancialTransa
     
     @Override
     public List<TransactionData> getAllTransactions(String userId) throws TransactionException {
-        // 这个方法直接返回所有交易数据，不需要过滤userId
-        // 在实际生产环境中，应该根据userId过滤交易数据
+        // This method returns all transaction data without filtering by userId
+        // In production environment, should filter transaction data by userId
         return new ArrayList<>(transactionList);
     }
 }

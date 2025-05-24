@@ -109,17 +109,24 @@ public class MockFinancialHealthAlService implements FinancialHealthAlService {
         // Prompt for savings allocation
         String userPromptForSavings = String.format(
             "A user (ID: %s) has $%.2f available for savings. " +
-            "Recommend a savings allocation plan across at least 3 categories (e.g., Emergency Fund, Short-term Goals, Long-term Investments). " +
-            "The sum of allocated amounts should ideally equal the available savings. " +
+            "Recommend a detailed savings allocation plan across exactly 6 specific categories: " +
+            "1. Emergency Fund (3-6 months living expenses) " +
+            "2. Short-term Goals (vacation, gadgets, home improvements) " +
+            "3. Long-term Investments (stocks, bonds, retirement funds) " +
+            "4. Education Fund (professional development, courses, children's education) " +
+            "5. Healthcare Reserve (medical emergencies, health insurance premiums) " +
+            "6. Business/Career Development (startup capital, equipment, networking). " +
+            "The sum of allocated amounts should equal the available savings. " +
             "Output each category and its allocated amount on a new line, strictly in the format 'Category Name: AMOUNT'. " +
             "For example: 'Emergency Fund: %.2f'. " +
             "Ensure amounts are numbers only. " +
-            "Do not include any introductory or concluding sentences, just the list of categories and amounts." +
+            "Consider the user's risk profile, age group, and financial priorities when allocating. " +
+            "Do not include any introductory or concluding sentences, just the list of 6 categories and amounts." +
             "%s", // Placeholder for transaction data prompt part
-            userId, availableSavings, availableSavings.multiply(new BigDecimal("0.4")), // Example amount for prompt
+            userId, availableSavings, availableSavings.multiply(new BigDecimal("0.25")), // Example amount for prompt
             allTransactions != null && !allTransactions.isEmpty() ?
-                String.format(" Base your recommendations on the user's financial context derived from the following transaction data:\n%s", transactionDataJson) :
-                " Since no specific transaction data is provided, provide a general recommendation based on the available savings amount."
+                String.format(" Base your recommendations on the user's financial context and spending patterns derived from the following transaction data:\n%s", transactionDataJson) :
+                " Since no specific transaction data is provided, provide a balanced general recommendation based on standard financial planning principles for the available savings amount."
         );
 
         try {
