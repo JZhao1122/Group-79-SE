@@ -32,70 +32,166 @@ public class DashboardPanel extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
 
         // --- Top Panel: Summary Text (Left) and Pie Chart (Right) ---
-        JPanel topContentPanel = new JPanel(new GridBagLayout()); // Changed to GridBagLayout
+        JPanel topContentPanel = new JPanel(new GridBagLayout());
         topContentPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
         GridBagConstraints gbc = new GridBagConstraints();
 
-        // Left side: Summary Text
-        JPanel summaryTextPanel = new JPanel(new GridLayout(2, 1, 0, 5)); 
-        summaryTextPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
-        summaryTextPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
+        // Left side: Summary Text with enhanced styling
+        JPanel summaryTextPanel = new JPanel();
+        summaryTextPanel.setLayout(new BoxLayout(summaryTextPanel, BoxLayout.Y_AXIS));
+        summaryTextPanel.setBackground(DeepManageApp.COLOR_PANEL_BACKGROUND);
+        summaryTextPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(DeepManageApp.COLOR_BORDER, 1),
+            BorderFactory.createEmptyBorder(25, 25, 25, 25)
+        ));
 
-        totalSpendingLabel = new JLabel("Total Spending: N/A"); // Translated
-        totalSpendingLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        savingsGoalLabel = new JLabel("Savings Goal: N/A"); // Initial text, will be updated
-        savingsGoalLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        // 创建标题
+        JLabel summaryTitle = new JLabel("📊 Financial Overview");
+        summaryTitle.setFont(new Font("SansSerif", Font.BOLD, 16));
+        summaryTitle.setForeground(DeepManageApp.COLOR_TEXT_PRIMARY);
+        summaryTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         
+        // 添加分隔线
+        JSeparator separator = new JSeparator();
+        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        separator.setForeground(DeepManageApp.COLOR_BORDER);
+        
+        totalSpendingLabel = new JLabel("Total Spending: N/A");
+        totalSpendingLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        totalSpendingLabel.setForeground(DeepManageApp.COLOR_PRIMARY);
+        totalSpendingLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        savingsGoalLabel = new JLabel("Savings Goal: N/A");
+        savingsGoalLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        savingsGoalLabel.setForeground(DeepManageApp.COLOR_PRIMARY);
+        savingsGoalLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // 按顺序添加组件，增加适当间距
+        summaryTextPanel.add(summaryTitle);
+        summaryTextPanel.add(Box.createVerticalStrut(10));
+        summaryTextPanel.add(separator);
+        summaryTextPanel.add(Box.createVerticalStrut(15));
         summaryTextPanel.add(totalSpendingLabel);
+        summaryTextPanel.add(Box.createVerticalStrut(10));
         summaryTextPanel.add(savingsGoalLabel);
+        summaryTextPanel.add(Box.createVerticalGlue()); // 填充剩余空间
         
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 0.3; // Summary panel takes 30% of horizontal space
+        gbc.weightx = 0.35; // Summary panel takes 35% of horizontal space
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 0, 15); // Right margin for summary panel
         topContentPanel.add(summaryTextPanel, gbc);
 
-        // Right side: Pie Chart Container
+        // Right side: Pie Chart Container with enhanced styling
         pieChartPanelContainer = new JPanel(new BorderLayout());
-        pieChartPanelContainer.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
-        pieChartPanelContainer.setBorder(BorderFactory.createTitledBorder("Spending by Category"));
+        pieChartPanelContainer.setBackground(DeepManageApp.COLOR_PANEL_BACKGROUND);
+        pieChartPanelContainer.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(DeepManageApp.COLOR_BORDER, 1),
+            BorderFactory.createTitledBorder(
+                BorderFactory.createEmptyBorder(15, 15, 15, 15),
+                "📊 Spending by Category",
+                0,
+                0,
+                new Font("SansSerif", Font.BOLD, 14),
+                DeepManageApp.COLOR_TEXT_PRIMARY
+            )
+        ));
+        
         JLabel pieChartPlaceholder = new JLabel("Pie chart will be displayed after data import", SwingConstants.CENTER);
+        pieChartPlaceholder.setFont(new Font("SansSerif", Font.ITALIC, 12));
+        pieChartPlaceholder.setForeground(DeepManageApp.COLOR_TEXT_SECONDARY);
         pieChartPanelContainer.add(pieChartPlaceholder, BorderLayout.CENTER);
         
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.weightx = 0.7; // Pie chart panel takes 70% of horizontal space
+        gbc.weightx = 0.65; // Pie chart panel takes 65% of horizontal space
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(0, 0, 0, 0); // No margin needed here
+        gbc.insets = new Insets(0, 0, 0, 0);
         topContentPanel.add(pieChartPanelContainer, gbc);
 
         add(topContentPanel, BorderLayout.NORTH);
 
-        // --- Center Panel: Line Chart ---
+        // --- Center Panel: Line Chart with enhanced styling ---
         lineChartPanelContainer = new JPanel(new BorderLayout());
-        lineChartPanelContainer.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
-        lineChartPanelContainer.setBorder(BorderFactory.createTitledBorder("Daily Spending Trend"));
+        lineChartPanelContainer.setBackground(DeepManageApp.COLOR_PANEL_BACKGROUND);
+        lineChartPanelContainer.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(DeepManageApp.COLOR_BORDER, 1),
+            BorderFactory.createTitledBorder(
+                BorderFactory.createEmptyBorder(15, 15, 15, 15),
+                "📈 Daily Spending Trend",
+                0,
+                0,
+                new Font("SansSerif", Font.BOLD, 14),
+                DeepManageApp.COLOR_TEXT_PRIMARY
+            )
+        ));
+        
         JLabel lineChartPlaceholder = new JLabel("Line chart will be displayed after data import", SwingConstants.CENTER);
+        lineChartPlaceholder.setFont(new Font("SansSerif", Font.ITALIC, 12));
+        lineChartPlaceholder.setForeground(DeepManageApp.COLOR_TEXT_SECONDARY);
         lineChartPanelContainer.add(lineChartPlaceholder, BorderLayout.CENTER);
         add(lineChartPanelContainer, BorderLayout.CENTER);
 
-        // --- Bottom Panel: Refresh Button ---
-        JButton refreshButton = new JButton("Refresh Data");
+        // --- Bottom Panel: Refresh Button with enhanced styling ---
+        JButton refreshButton = createStyledButton("🔄 Refresh Data");
         refreshButton.addActionListener(e -> loadAndDisplayCharts());
+        
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         southPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
+        southPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
         southPanel.add(refreshButton);
         add(southPanel, BorderLayout.SOUTH);
 
-        System.out.println("[DashboardPanel] Initialization complete. Waiting for data refresh or updates.");
+        System.out.println("[DashboardPanel] Initialization complete with enhanced styling. Waiting for data refresh or updates.");
+    }
+    
+    /**
+     * 创建样式化按钮
+     */
+    private JButton createStyledButton(String text) {
+        Color bgColor = DeepManageApp.COLOR_BUTTON_PRIMARY;
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (getModel().isPressed()) {
+                    g.setColor(new Color(
+                        Math.max(0, bgColor.getRed() - 40),
+                        Math.max(0, bgColor.getGreen() - 40),
+                        Math.max(0, bgColor.getBlue() - 40)
+                    ));
+                } else if (getModel().isRollover()) {
+                    g.setColor(DeepManageApp.COLOR_PRIMARY_DARK);
+                } else {
+                    g.setColor(bgColor);
+                }
+                g.fillRect(0, 0, getWidth(), getHeight());
+                
+                // Draw text
+                g.setColor(Color.WHITE);
+                FontMetrics fm = g.getFontMetrics();
+                int x = (getWidth() - fm.stringWidth(getText())) / 2;
+                int y = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+                g.drawString(getText(), x, y);
+            }
+        };
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setForeground(Color.WHITE);
+        button.setBackground(bgColor);
+        button.setBorder(BorderFactory.createEmptyBorder(12, 24, 12, 24));
+        button.setFocusPainted(false);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        return button;
     }
 
     public void loadAndDisplayCharts() {
@@ -305,14 +401,19 @@ public class DashboardPanel extends JPanel {
             
             int width = getWidth();
             int height = getHeight();
-            int pieSize = Math.min(width, height) - 80; // Leave space for legend
             
-            if (pieSize < 50) {
-                g2d.drawString("Window too small to display chart", 10, 20);
-                return; // Too small, don't draw
+            // 调整布局：左侧饼图，右侧标签
+            int pieSize = Math.min(width * 3/5, height - 40); // 饼图占宽度的3/5
+            int legendWidth = width * 2/5; // 标签区域占宽度的2/5
+            
+            if (pieSize < 80) {
+                g2d.setFont(new Font("SansSerif", Font.PLAIN, 12));
+                g2d.setColor(DeepManageApp.COLOR_TEXT_SECONDARY);
+                g2d.drawString("Panel too small to display chart", 10, height/2);
+                return;
             }
             
-            int centerX = width / 3;
+            int centerX = pieSize / 2 + 20; // 饼图中心，左侧留边距
             int centerY = height / 2;
             
             // Calculate total amount
@@ -323,7 +424,9 @@ public class DashboardPanel extends JPanel {
             
             // If total is zero, show message
             if (total.compareTo(BigDecimal.ZERO) == 0) {
-                g2d.drawString("No transaction data", centerX - 50, centerY);
+                g2d.setFont(new Font("SansSerif", Font.PLAIN, 14));
+                g2d.setColor(DeepManageApp.COLOR_TEXT_SECONDARY);
+                g2d.drawString("No transaction data", centerX - 40, centerY);
                 return;
             }
             
@@ -331,6 +434,11 @@ public class DashboardPanel extends JPanel {
             
             // Draw pie chart
             int startAngle = 0;
+            int legendStartX = pieSize + 40; // 标签起始X位置
+            int legendStartY = 30; // 标签起始Y位置
+            int lineHeight = 22; // 每行标签高度
+            int maxLegendItems = (height - 60) / lineHeight; // 最大显示标签数
+            
             int i = 0;
             for (Map.Entry<String, BigDecimal> entry : data.entrySet()) {
                 String category = entry.getKey();
@@ -340,7 +448,7 @@ public class DashboardPanel extends JPanel {
                 double proportion = amount.doubleValue() / total.doubleValue();
                 int angle = (int) (proportion * 360);
                 
-                if (angle > 0) { // Only draw if angle is greater than 0
+                if (angle > 0 && i < maxLegendItems) { // 只绘制有意义的扇形和在范围内的标签
                     // Fill sector
                     g2d.setColor(colorMap.get(category));
                     g2d.fillArc(centerX - pieSize/2, centerY - pieSize/2, pieSize, pieSize, startAngle, angle);
@@ -349,19 +457,58 @@ public class DashboardPanel extends JPanel {
                     // Update start angle
                     startAngle += angle;
                     
-                    // Draw legend
-                    int legendY = 30 + i * 20;
-                    g2d.fillRect(width * 2/3, legendY, 15, 15);
-                    g2d.setColor(Color.BLACK);
-                    g2d.setFont(font);
-                    
-                    // Format amount and percentage
-                    String amountStr = String.format("¥%.2f", amount);
-                    String percentStr = String.format("(%.1f%%)", proportion * 100);
-                    
-                    g2d.drawString(category + ": " + amountStr + " " + percentStr, width * 2/3 + 20, legendY + 12);
+                    // Draw legend - 调整布局避免超出
+                    int legendY = legendStartY + i * lineHeight;
+                    if (legendY + 15 < height) { // 确保标签不超出高度
+                        // 绘制颜色方块
+                        g2d.fillRect(legendStartX, legendY, 12, 12);
+                        
+                        // 绘制文本
+                        g2d.setColor(DeepManageApp.COLOR_TEXT_PRIMARY);
+                        g2d.setFont(new Font("SansSerif", Font.BOLD, 11));
+                        
+                        // Format amount and percentage
+                        String amountStr = String.format("¥%.0f", amount);
+                        String percentStr = String.format("(%.1f%%)", proportion * 100);
+                        
+                        // 显示完整类别名称，只在必要时截断
+                        String displayCategory = category;
+                        String legendText = displayCategory + ": " + amountStr + " " + percentStr;
+                        
+                        // 确保文本不超出右边界
+                        FontMetrics fm = g2d.getFontMetrics();
+                        int textWidth = fm.stringWidth(legendText);
+                        int availableWidth = width - legendStartX - 18 - 10; // 留一些右边距
+                        
+                        if (textWidth > availableWidth) {
+                            // 如果文本太长，优先显示类别名和金额，省略百分比
+                            legendText = displayCategory + ": " + amountStr;
+                            textWidth = fm.stringWidth(legendText);
+                            
+                            if (textWidth > availableWidth) {
+                                // 如果还是太长，适当截断类别名
+                                int maxCategoryLength = Math.max(4, (availableWidth - fm.stringWidth(": " + amountStr)) / fm.charWidth('A'));
+                                if (displayCategory.length() > maxCategoryLength) {
+                                    displayCategory = displayCategory.substring(0, maxCategoryLength - 3) + "...";
+                                }
+                                legendText = displayCategory + ": " + amountStr;
+                            }
+                        }
+                        
+                        g2d.drawString(legendText, legendStartX + 18, legendY + 10);
+                    }
                     
                     i++;
+                }
+            }
+            
+            // 如果有更多项目未显示，添加提示
+            if (data.size() > maxLegendItems) {
+                int moreY = legendStartY + maxLegendItems * lineHeight;
+                if (moreY < height - 15) {
+                    g2d.setColor(DeepManageApp.COLOR_TEXT_SECONDARY);
+                    g2d.setFont(new Font("SansSerif", Font.BOLD, 10));
+                    g2d.drawString("..." + (data.size() - maxLegendItems) + " more items", legendStartX, moreY);
                 }
             }
             
@@ -508,7 +655,7 @@ public class DashboardPanel extends JPanel {
             }
             
             // Add chart title
-            g2d.setFont(new Font(font.getName(), Font.BOLD, 14));
+            g2d.setFont(new Font("SansSerif", Font.BOLD, 14));
             g2d.drawString("Daily Spending Trend", leftMargin + width/2 - 70, 15);
             
             System.out.println("[SimpleLineChart.paint] Line chart drawing complete");

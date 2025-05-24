@@ -18,7 +18,7 @@ public class Module1Panel extends JPanel {
     private final JTextField amountField = new JTextField(15);
     private final JTextField dateField = new JTextField(10); // Simplified
     private final JTextField descriptionField = new JTextField(25);
-    private final JComboBox<String> paymentMethodCombo = new JComboBox<>(new String[]{"Alipay", "WeChat Pay", "Credit Card", "Cash", "Bank Transfer"});
+    private final JComboBox<String> paymentMethodCombo = new JComboBox<>(new String[]{"💳 Alipay", "💚 WeChat Pay", "🏦 Credit Card", "💵 Cash", "🏛️ Bank Transfer"});
     private final JTextArea resultArea = new JTextArea(5, 50);
     private final DeepManageApp appReference; // Reference to the main application
 
@@ -29,45 +29,94 @@ public class Module1Panel extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND); // Use color from Main App
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
 
         // Manual Entry Form
         JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
-        formPanel.setBorder(BorderFactory.createTitledBorder("Manual Transaction Entry"));
+        formPanel.setBackground(DeepManageApp.COLOR_PANEL_BACKGROUND);
+        formPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(DeepManageApp.COLOR_BORDER, 1),
+            BorderFactory.createTitledBorder(
+                BorderFactory.createEmptyBorder(15, 15, 15, 15),
+                "💰 Manual Transaction Entry",
+                0,
+                0,
+                new Font("SansSerif", Font.BOLD, 16),
+                DeepManageApp.COLOR_TEXT_PRIMARY
+            )
+        ));
+        
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
-        paymentMethodCombo.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND); // Style combo box
+        // Style form components
+        styleTextField(amountField);
+        styleTextField(dateField);
+        styleTextField(descriptionField);
+        styleComboBox(paymentMethodCombo);
 
-        gbc.gridx = 0; gbc.gridy = 0; formPanel.add(new JLabel("Amount:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 0; formPanel.add(amountField, gbc);
-        gbc.gridx = 0; gbc.gridy = 1; formPanel.add(new JLabel("Date (YYYY-MM-DD):"), gbc);
-        gbc.gridx = 1; gbc.gridy = 1; formPanel.add(dateField, gbc);
-        gbc.gridx = 0; gbc.gridy = 2; formPanel.add(new JLabel("Description:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 2; formPanel.add(descriptionField, gbc);
-        gbc.gridx = 0; gbc.gridy = 3; formPanel.add(new JLabel("Payment Method:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 3; formPanel.add(paymentMethodCombo, gbc);
+        // Create styled labels
+        JLabel amountLabel = createStyledLabel("💵 Amount:");
+        JLabel dateLabel = createStyledLabel("📅 Date (YYYY-MM-DD):");
+        JLabel descLabel = createStyledLabel("📝 Description:");
+        JLabel paymentLabel = createStyledLabel("💳 Payment Method:");
 
-        JButton saveButton = new JButton("Save Manual Transaction");
-        gbc.gridx = 1; gbc.gridy = 4; gbc.anchor = GridBagConstraints.EAST; formPanel.add(saveButton, gbc);
+        gbc.gridx = 0; gbc.gridy = 0; formPanel.add(amountLabel, gbc);
+        gbc.gridx = 1; gbc.gridy = 0; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0; formPanel.add(amountField, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0; formPanel.add(dateLabel, gbc);
+        gbc.gridx = 1; gbc.gridy = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0; formPanel.add(dateField, gbc);
+        gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0; formPanel.add(descLabel, gbc);
+        gbc.gridx = 1; gbc.gridy = 2; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0; formPanel.add(descriptionField, gbc);
+        gbc.gridx = 0; gbc.gridy = 3; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0; formPanel.add(paymentLabel, gbc);
+        gbc.gridx = 1; gbc.gridy = 3; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0; formPanel.add(paymentMethodCombo, gbc);
+
+        JButton saveButton = createStyledButton("💾 Save Transaction", DeepManageApp.COLOR_SUCCESS);
+        gbc.gridx = 1; gbc.gridy = 4; gbc.anchor = GridBagConstraints.EAST; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0; 
+        gbc.insets = new Insets(20, 10, 10, 10);
+        formPanel.add(saveButton, gbc);
 
         // Import Section
-        JPanel importPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        importPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
-        importPanel.setBorder(BorderFactory.createTitledBorder("Import Transactions"));
-        JButton importButton = new JButton("Import CSV/Excel File...");
+        JPanel importPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
+        importPanel.setBackground(DeepManageApp.COLOR_PANEL_BACKGROUND);
+        importPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(DeepManageApp.COLOR_BORDER, 1),
+            BorderFactory.createTitledBorder(
+                BorderFactory.createEmptyBorder(15, 15, 15, 15),
+                "📂 Import Transactions",
+                0,
+                0,
+                new Font("SansSerif", Font.BOLD, 16),
+                DeepManageApp.COLOR_TEXT_PRIMARY
+            )
+        ));
+        
+        JButton importButton = createStyledButton("📁 Import CSV/Excel File", DeepManageApp.COLOR_BUTTON_PRIMARY);
         importPanel.add(importButton);
 
         // Results Area
         resultArea.setEditable(false);
+        resultArea.setFont(new Font("Consolas", Font.PLAIN, 12));
+        resultArea.setBackground(new Color(0xF8F9FA));
+        resultArea.setForeground(DeepManageApp.COLOR_TEXT_PRIMARY);
+        resultArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
         JScrollPane scrollPane = new JScrollPane(resultArea);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Log"));
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(DeepManageApp.COLOR_BORDER, 1),
+            BorderFactory.createTitledBorder(
+                BorderFactory.createEmptyBorder(10, 10, 10, 10),
+                "📋 Activity Log",
+                0,
+                0,
+                new Font("SansSerif", Font.BOLD, 14),
+                DeepManageApp.COLOR_TEXT_PRIMARY
+            )
+        ));
 
-        JPanel bottomArea = new JPanel(new BorderLayout());
+        JPanel bottomArea = new JPanel(new BorderLayout(0, 15));
         bottomArea.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
         bottomArea.add(importPanel, BorderLayout.NORTH);
         bottomArea.add(scrollPane, BorderLayout.CENTER);
@@ -75,14 +124,74 @@ public class Module1Panel extends JPanel {
         add(formPanel, BorderLayout.NORTH);
         add(bottomArea, BorderLayout.CENTER);
 
-        // Attach listeners here or call a separate method
+        // Attach listeners
         saveButton.addActionListener(this::saveManualTransaction);
         importButton.addActionListener(this::importFile);
     }
-
-    // Separate listener attachment logic if preferred
-    private void attachListeners() {
-        // Listeners are attached during initComponents in this version
+    
+    private void styleTextField(JTextField field) {
+        field.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        field.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(DeepManageApp.COLOR_BORDER, 1),
+            BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        field.setBackground(Color.WHITE);
+        field.setForeground(DeepManageApp.COLOR_TEXT_PRIMARY);
+    }
+    
+    private void styleComboBox(JComboBox<String> comboBox) {
+        comboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        comboBox.setBackground(Color.WHITE);
+        comboBox.setForeground(DeepManageApp.COLOR_TEXT_PRIMARY);
+        comboBox.setBorder(BorderFactory.createLineBorder(DeepManageApp.COLOR_BORDER, 1));
+    }
+    
+    private JLabel createStyledLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("SansSerif", Font.BOLD, 14));
+        label.setForeground(DeepManageApp.COLOR_TEXT_PRIMARY);
+        return label;
+    }
+    
+    private JButton createStyledButton(String text, Color bgColor) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (getModel().isPressed()) {
+                    g.setColor(new Color(
+                        Math.max(0, bgColor.getRed() - 40),
+                        Math.max(0, bgColor.getGreen() - 40),
+                        Math.max(0, bgColor.getBlue() - 40)
+                    ));
+                } else if (getModel().isRollover()) {
+                    g.setColor(new Color(
+                        Math.max(0, bgColor.getRed() - 20),
+                        Math.max(0, bgColor.getGreen() - 20),
+                        Math.max(0, bgColor.getBlue() - 20)
+                    ));
+                } else {
+                    g.setColor(bgColor);
+                }
+                g.fillRect(0, 0, getWidth(), getHeight());
+                
+                // Draw text
+                g.setColor(Color.WHITE);
+                FontMetrics fm = g.getFontMetrics();
+                int x = (getWidth() - fm.stringWidth(getText())) / 2;
+                int y = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+                g.drawString(getText(), x, y);
+            }
+        };
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setForeground(Color.WHITE);
+        button.setBackground(bgColor);
+        button.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
+        button.setFocusPainted(false);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        return button;
     }
 
     private void saveManualTransaction(ActionEvent e) {
@@ -94,8 +203,8 @@ public class Module1Panel extends JPanel {
             data.setPaymentMethod((String) paymentMethodCombo.getSelectedItem());
 
             String newId = financialTransactionService.addTransaction(data);
-            resultArea.append("SUCCESS: Transaction added with ID: " + newId + "\n");
-            JOptionPane.showMessageDialog(this, "Transaction added with ID: " + newId, "Success", JOptionPane.INFORMATION_MESSAGE);
+            resultArea.append("✅ SUCCESS: Transaction added with ID: " + newId + "\n");
+            JOptionPane.showMessageDialog(this, "✅ Transaction added successfully!\nID: " + newId, "Success", JOptionPane.INFORMATION_MESSAGE);
             amountField.setText(""); dateField.setText(""); descriptionField.setText(""); paymentMethodCombo.setSelectedIndex(0);
             
             // Refresh dashboard after manual entry too
@@ -104,33 +213,43 @@ public class Module1Panel extends JPanel {
             }
 
         } catch (NumberFormatException | DateTimeParseException ex) {
-            resultArea.append("ERROR: Invalid input format.\n");
-            JOptionPane.showMessageDialog(this, "Invalid input format:\nAmount must be a number.\nDate must be YYYY-MM-DD.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            resultArea.append("❌ ERROR: Invalid input format.\n");
+            JOptionPane.showMessageDialog(this, "❌ Invalid input format:\n• Amount must be a number\n• Date must be YYYY-MM-DD", "Input Error", JOptionPane.ERROR_MESSAGE);
         } catch (TransactionException ex) {
-            resultArea.append("ERROR: " + ex.getMessage() + "\n");
-            JOptionPane.showMessageDialog(this, "Error saving transaction: " + ex.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+            resultArea.append("❌ ERROR: " + ex.getMessage() + "\n");
+            JOptionPane.showMessageDialog(this, "❌ Error saving transaction:\n" + ex.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void importFile(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("CSV and Excel files", "csv", "xlsx", "xls"));
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            resultArea.append("INFO: Importing file: " + selectedFile.getName() + "\n");
+            resultArea.append("📂 INFO: Importing file: " + selectedFile.getName() + "\n");
             try (InputStream fileStream = new FileInputStream(selectedFile)) {
                 int count = financialTransactionService.importTransactions(fileStream);
-                resultArea.append("SUCCESS: Imported " + count + " transactions.\n");
-                JOptionPane.showMessageDialog(this, "Successfully imported " + count + " transactions.", "Import Success", JOptionPane.INFORMATION_MESSAGE);
+                resultArea.append("✅ SUCCESS: Imported " + count + " transactions.\n");
+                JOptionPane.showMessageDialog(this, "✅ Import successful!\n" + count + " transactions imported.", "Import Success", JOptionPane.INFORMATION_MESSAGE);
                 
                 // Refresh dashboard data after successful import
                 if (appReference != null) {
                     appReference.refreshDashboardData();
                 }
 
-            } catch (FileNotFoundException ex) { resultArea.append("ERROR: File not found.\n"); JOptionPane.showMessageDialog(this, "File not found.", "Import Error", JOptionPane.ERROR_MESSAGE);
-            } catch (TransactionException ex) { resultArea.append("ERROR: Import failed - " + ex.getMessage() + "\n"); JOptionPane.showMessageDialog(this, "Import Failed: " + ex.getMessage(), "Import Error", JOptionPane.ERROR_MESSAGE);
-            } catch (IOException ex) { resultArea.append("ERROR: Could not read file.\n"); JOptionPane.showMessageDialog(this, "Error reading file: " + ex.getMessage(), "Import Error", JOptionPane.ERROR_MESSAGE); }
-        } else { resultArea.append("INFO: File import cancelled.\n"); }
+            } catch (FileNotFoundException ex) { 
+                resultArea.append("❌ ERROR: File not found.\n"); 
+                JOptionPane.showMessageDialog(this, "❌ File not found.", "Import Error", JOptionPane.ERROR_MESSAGE);
+            } catch (TransactionException ex) { 
+                resultArea.append("❌ ERROR: Import failed - " + ex.getMessage() + "\n"); 
+                JOptionPane.showMessageDialog(this, "❌ Import Failed:\n" + ex.getMessage(), "Import Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) { 
+                resultArea.append("❌ ERROR: Could not read file.\n"); 
+                JOptionPane.showMessageDialog(this, "❌ Error reading file:\n" + ex.getMessage(), "Import Error", JOptionPane.ERROR_MESSAGE); 
+            }
+        } else { 
+            resultArea.append("ℹ️ INFO: File import cancelled.\n"); 
+        }
     }
 }
