@@ -16,20 +16,54 @@ public class TransactionQueryServiceImpl implements TransactionQueryService {
 
     @Override
     public List<TransactionDisplayData> getTransactionsForReview(String userId) throws QueryException {
-        List<TransactionData> allTransactions = financialTransactionService.getAllTransactions();
-        List<TransactionDisplayData> displayList = new ArrayList<>();
-        for (TransactionData t : allTransactions) {
-            TransactionDisplayData display = new TransactionDisplayData(
-                t.getId(), t.getDate(), t.getDescription(), t.getAmount(),
-                t.getPaymentMethod(), t.getCategory(), t.getCategory()
-            );
-            displayList.add(display);
+        try {
+            List<TransactionData> allTransactions = financialTransactionService.getAllTransactions();
+            List<TransactionDisplayData> displayList = new ArrayList<>();
+            
+            System.out.println("[TransactionQueryServiceImpl] Retrieved " + allTransactions.size() + " transaction records");
+            
+            for (TransactionData t : allTransactions) {
+                // Use existing category as AI suggested category, corrected category initially set to same value
+                TransactionDisplayData display = new TransactionDisplayData(
+                    t.getId(), 
+                    t.getDate(), 
+                    t.getDescription(), 
+                    t.getAmount(),
+                    t.getPaymentMethod(), 
+                    t.getCategory(), // AI suggested category
+                    t.getCategory()  // Current/corrected category
+                );
+                displayList.add(display);
+            }
+            
+            System.out.println("[TransactionQueryServiceImpl] Returning " + displayList.size() + " display records");
+            return displayList;
+        } catch (Exception e) {
+            throw new QueryException("Failed to retrieve transactions for review: " + e.getMessage(), e);
         }
-        return displayList;
     }
 
     @Override
     public void updateTransactionCategory(String transactionId, String correctedCategory) throws TransactionException {
-        // 可选：实现分类更正逻辑
+        try {
+            // Get all transactions
+            List<TransactionData> allTransactions = financialTransactionService.getAllTransactions();
+            
+            // Find and update the specified transaction's category
+            for (TransactionData transaction : allTransactions) {
+                if (transactionId.equals(transaction.getId())) {
+                    transaction.setCategory(correctedCategory);
+                    System.out.println("[TransactionQueryServiceImpl] Updated transaction " + transactionId + " category to: " + correctedCategory);
+                    return;
+                }
+            }
+            
+            throw new TransactionException("Transaction ID not found: " + transactionId);
+        } catch (Exception e) {
+            if (e instanceof TransactionException) {
+                throw e;
+            }
+            throw new TransactionException("Failed to update transaction category: " + e.getMessage(), e);
+        }
     }
 }
