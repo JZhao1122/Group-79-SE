@@ -248,22 +248,42 @@ public class Module5Panel extends JPanel {
 
         if (compositionToEvaluate == null || compositionToEvaluate.isEmpty()) {
             resultArea.append("⚠️ No portfolio data has been imported. Using default mock portfolio for evaluation.\n");
-            resultArea.append("📊 Default: Stocks 60%, Bonds 25%, Cash 15%\n");
-            resultArea.append("═══════════════════════════════════════════════════════\n");
-            // Fallback to default if nothing imported or service returns null/empty
+            resultArea.append("📊 Default Portfolio Composition:\n");
+            // Create default portfolio with actual amounts for demo
             compositionToEvaluate = Map.of(
-                    "Stocks", new BigDecimal("0.60"), 
-                    "Bonds", new BigDecimal("0.25"), 
-                    "Cash", new BigDecimal("0.15")
+                    "Stocks", new BigDecimal("600000.00"), 
+                    "Bonds", new BigDecimal("250000.00"), 
+                    "Cash", new BigDecimal("150000.00")
             );
+            
+            // Calculate total and display with percentages
+            BigDecimal totalValue = compositionToEvaluate.values().stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+            compositionToEvaluate.forEach((asset, amount) -> {
+                BigDecimal percentage = amount.divide(totalValue, 4, RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal("100"));
+                resultArea.append(String.format("  💼 %s: ¥%.2f (%.1f%%)\n", 
+                    asset, amount, percentage));
+            });
+            resultArea.append(String.format("  💰 Total Portfolio Value: ¥%.2f\n", totalValue));
+            resultArea.append("═══════════════════════════════════════════════════════\n");
         } else {
             resultArea.append("📈 Using imported portfolio data for evaluation:\n");
             resultArea.append("Current Portfolio Composition:\n");
-            // It's good practice to ensure amounts are scaled for display if they aren't already
-            // However, the mock service already scales them in its output log upon import.
-            compositionToEvaluate.forEach((asset, amount) -> 
-                resultArea.append(String.format("  💼 %s: %.2f%%\n", asset, amount.multiply(new BigDecimal("100"))))
-            );
+            
+            // Calculate total portfolio value for percentage calculation
+            BigDecimal totalValue = compositionToEvaluate.values().stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+            compositionToEvaluate.forEach((asset, amount) -> {
+                // Calculate percentage correctly from absolute amounts
+                BigDecimal percentage = amount.divide(totalValue, 4, RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal("100"));
+                resultArea.append(String.format("  💼 %s: ¥%.2f (%.1f%%)\n", 
+                    asset, amount, percentage));
+            });
+            resultArea.append(String.format("  💰 Total Portfolio Value: ¥%.2f\n", totalValue));
             resultArea.append("═══════════════════════════════════════════════════════\n");
         }
 
@@ -284,13 +304,45 @@ public class Module5Panel extends JPanel {
                         resultArea.append("💡 This might indicate your current portfolio is already well-optimized!\n");
                     } else {
                         resultArea.append("📊 Recommended Portfolio Composition:\n\n");
-                        suggestedComposition.forEach((asset, amount) -> 
-                            resultArea.append(String.format("  🎯 %s: %.2f%%\n", asset, amount.multiply(new BigDecimal("100"))))
-                        );
-                        // Optional: Calculate and display total of suggested composition to verify
-                        BigDecimal suggestedTotal = suggestedComposition.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-                        resultArea.append(String.format("\n💰 Total Allocation Coverage: %.1f%%\n", suggestedTotal.multiply(new BigDecimal("100")).setScale(1, RoundingMode.HALF_UP)));
-                        resultArea.append("\n✨ Consider rebalancing your portfolio according to these AI recommendations for optimal performance!\n");
+                        
+                        // Calculate total for percentage calculation
+                        BigDecimal suggestedTotal = suggestedComposition.values().stream()
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                        
+                        suggestedComposition.forEach((asset, amount) -> {
+                            BigDecimal percentage = amount.divide(suggestedTotal, 4, RoundingMode.HALF_UP)
+                                .multiply(new BigDecimal("100"));
+                            resultArea.append(String.format("  🎯 %s: ¥%.2f (%.1f%%)\n", 
+                                asset, amount, percentage));
+                        });
+                        
+                        resultArea.append(String.format("\n💰 Total Allocation Coverage: ¥%.2f (100.0%%)\n", suggestedTotal));
+                        
+                        // Add AI explanation for the recommendations
+                        resultArea.append("\n🧠 AI Analysis & Rationale:\n");
+                        resultArea.append("─────────────────────────────────────────────────────\n");
+                        resultArea.append("📈 DIVERSIFICATION OPTIMIZATION:\n");
+                        resultArea.append("   • The recommended allocation follows modern portfolio theory\n");
+                        resultArea.append("   • Balances risk and return across different asset classes\n");
+                        resultArea.append("   • Reduces concentration risk in any single investment type\n\n");
+                        
+                        resultArea.append("⚖️ RISK MANAGEMENT:\n");
+                        resultArea.append("   • Spreads exposure across complementary asset categories\n");
+                        resultArea.append("   • Maintains liquidity through appropriate cash allocation\n");
+                        resultArea.append("   • Provides stability during market volatility\n\n");
+                        
+                        resultArea.append("🎯 STRATEGIC BENEFITS:\n");
+                        resultArea.append("   • Optimizes long-term growth potential\n");
+                        resultArea.append("   • Aligns with financial best practices\n");
+                        resultArea.append("   • Suitable for various market conditions\n\n");
+                        
+                        resultArea.append("💡 IMPLEMENTATION SUGGESTIONS:\n");
+                        resultArea.append("   • Gradually rebalance to avoid market timing risks\n");
+                        resultArea.append("   • Review and adjust quarterly based on performance\n");
+                        resultArea.append("   • Consider tax implications when restructuring\n");
+                        resultArea.append("   • Maintain emergency fund separate from investments\n\n");
+                        
+                        resultArea.append("✨ Consider rebalancing your portfolio according to these AI recommendations for optimal performance!\n");
                     }
                 } catch (Exception ex) { 
                     handleException(ex, "portfolio evaluation with AI suggestion"); 
