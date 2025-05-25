@@ -47,13 +47,13 @@ public class Module3Panel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
 
-        // 创建标题面板
+        // Create title panel
         JPanel titlePanel = createTitlePanel();
         
-        // 创建主要内容面板
+        // Create main content panel
         JPanel mainContentPanel = createMainContentPanel();
         
-        // 创建季节性分析面板
+        // Create a seasonal analysis panel
         JPanel seasonalPanel = createSeasonalAnalysisPanel();
 
         add(titlePanel, BorderLayout.NORTH);
@@ -89,10 +89,10 @@ public class Module3Panel extends JPanel {
         JPanel mainPanel = new JPanel(new BorderLayout(15, 15));
         mainPanel.setBackground(DeepManageApp.COLOR_MAIN_BACKGROUND);
 
-        // 创建操作按钮面板
+        // Create operation button panel
         JPanel buttonPanel = createButtonPanel();
         
-        // 创建表格面板
+        // Create a table panel
         JPanel tablePanel = createTablePanel();
 
         mainPanel.add(buttonPanel, BorderLayout.NORTH);

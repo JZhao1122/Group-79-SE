@@ -79,7 +79,7 @@ public class DashboardPanel extends JPanel {
         summaryTextPanel.add(totalSpendingLabel);
         summaryTextPanel.add(Box.createVerticalStrut(10));
         summaryTextPanel.add(savingsGoalLabel);
-        summaryTextPanel.add(Box.createVerticalGlue()); // 填充剩余空间
+        summaryTextPanel.add(Box.createVerticalGlue()); 
         
         gbc.gridx = 0;
         gbc.gridy = 0;

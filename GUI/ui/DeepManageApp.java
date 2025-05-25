@@ -191,7 +191,7 @@ public class DeepManageApp extends JFrame {
     }
     
     /**
-     * 创建样式化按钮
+     * 
      */
     private JButton createStyledButton(String text, boolean isWarning) {
         Color bgColor = isWarning ? COLOR_WARNING : COLOR_PRIMARY_LIGHT;
@@ -276,7 +276,7 @@ public class DeepManageApp extends JFrame {
                 button.setToolTipText("Feature not implemented in demo");
             }
             sidebarPanel.add(button);
-            sidebarPanel.add(Box.createVerticalStrut(5)); // 添加按钮间距
+            sidebarPanel.add(Box.createVerticalStrut(5)); 
         }
 
         sidebarPanel.add(Box.createVerticalGlue());
@@ -292,11 +292,11 @@ public class DeepManageApp extends JFrame {
         button.setContentAreaFilled(false);
         button.setOpaque(true);
         button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); // 增加高度
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); 
         button.setFont(new Font("SansSerif", Font.PLAIN, 14));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // 添加悬停效果
+        // Add hover effect
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {

@@ -67,7 +67,6 @@ public abstract class FinancialTransactionServiceImpl implements FinancialTransa
                 lineNumber++;
                 try {
                     TransactionData transaction = parseTransactionLine(line);
-                    // 自动AI分类
                     try {
                         TransactionDetails details = new TransactionDetails();
                         details.setDescription(transaction.getDescription());

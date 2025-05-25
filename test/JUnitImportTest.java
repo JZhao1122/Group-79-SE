@@ -1,4 +1,4 @@
-// JUnit导入测试
+// JUnit import test
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,94 +6,94 @@ import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 这个测试类用于验证JUnit库是否可以正常导入和使用
+ * This test class is used to verify that the JUnit library can be imported and used properly.
  */
 public class JUnitImportTest {
     
     @BeforeEach
     void setUp() {
-        System.out.println("🔧 测试准备...");
+        System.out.println("🔧 Preparing for test...");
     }
     
     @AfterEach
     void tearDown() {
-        System.out.println("🧹 测试清理...");
+        System.out.println("🧹 Cleaning up after test...");
     }
     
     @Test
-    @DisplayName("验证JUnit基本断言功能")
+    @DisplayName("Verify basic JUnit assertions")
     void testBasicAssertions() {
-        System.out.println("📋 运行基本断言测试...");
+        System.out.println("📋 Running basic assertions test...");
         
-        // 测试基本的assertEquals
-        assertEquals(4, 2 + 2, "2 + 2 应该等于 4");
+        // Test basic assertEquals
+        assertEquals(4, 2 + 2, "2 + 2 should be 4");
         
-        // 测试assertTrue和assertFalse
-        assertTrue(true, "true应该为真");
-        assertFalse(false, "false应该为假");
+        // Test assertTrue and assertFalse
+        assertTrue(true, "true should be true");
+        assertFalse(false, "false should be false");
         
-        // 测试assertNotNull
+        // Test assertNotNull
         String testString = "Hello JUnit";
-        assertNotNull(testString, "字符串不应该为null");
+        assertNotNull(testString, "String should not be null");
         
-        System.out.println("✅ 基本断言测试通过！");
+        System.out.println("✅ Basic assertions test passed!");
     }
     
     @Test
-    @DisplayName("验证字符串操作")
+    @DisplayName("Verify string operations")
     void testStringOperations() {
-        System.out.println("📝 运行字符串测试...");
+        System.out.println("📝 Running string operations test...");
         
         String expected = "JUnit Test";
         String actual = "JUnit" + " " + "Test";
         
-        assertEquals(expected, actual, "字符串拼接应该正确");
-        assertTrue(actual.contains("JUnit"), "结果应该包含'JUnit'");
+        assertEquals(expected, actual, "String concatenation should be correct");
+        assertTrue(actual.contains("JUnit"), "Result should contain 'JUnit'");
         
-        System.out.println("✅ 字符串测试通过！");
+        System.out.println("✅ String operations test passed!");
     }
     
     @Test
-    @DisplayName("验证数组和集合操作")
+    @DisplayName("Verify array and collection operations")
     void testArrayAndCollections() {
-        System.out.println("📊 运行数组和集合测试...");
+        System.out.println("📊 Running array and collection test...");
         
         int[] numbers = {1, 2, 3, 4, 5};
-        assertEquals(5, numbers.length, "数组长度应该为5");
+        assertEquals(5, numbers.length, "Array length should be 5");
         
-        // 测试数组内容
-        assertArrayEquals(new int[]{1, 2, 3, 4, 5}, numbers, "数组内容应该匹配");
+        // Test array contents
+        assertArrayEquals(new int[]{1, 2, 3, 4, 5}, numbers, "Array contents should match");
         
-        System.out.println("✅ 数组和集合测试通过！");
+        System.out.println("✅ Array and collection test passed!");
     }
     
     @Test
-    @DisplayName("验证异常处理")
+    @DisplayName("Verify exception handling")
     void testExceptionHandling() {
-        System.out.println("⚠️  运行异常处理测试...");
+        System.out.println("⚠️  Running exception handling test...");
         
-        // 测试预期异常
+        // Test expected exception
         assertThrows(ArithmeticException.class, () -> {
             int result = 10 / 0;
-        }, "除零应该抛出ArithmeticException");
+        }, "Division by zero should throw ArithmeticException");
         
-        System.out.println("✅ 异常处理测试通过！");
+        System.out.println("✅ Exception handling test passed!");
     }
     
     @Test
-    @DisplayName("JUnit库导入验证")
+    @DisplayName("JUnit library import verification")
     void testJUnitImport() {
-        System.out.println("📚 验证JUnit库导入...");
+        System.out.println("📚 Verifying JUnit library import...");
         
-        // 如果能运行到这里，说明JUnit导入成功
-        System.out.println("✅ 成功导入以下JUnit类：");
+        // If this runs, JUnit is imported successfully
+        System.out.println("✅ Successfully imported the following JUnit classes:");
         System.out.println("   - org.junit.jupiter.api.Test");
         System.out.println("   - org.junit.jupiter.api.DisplayName");
         System.out.println("   - org.junit.jupiter.api.BeforeEach");
         System.out.println("   - org.junit.jupiter.api.AfterEach");
         System.out.println("   - org.junit.jupiter.api.Assertions");
         
-        // 简单的成功断言
-        assertTrue(true, "JUnit库导入并运行成功！");
+        // Simple success assertion
+        assertTrue(true, "JUnit library imported and running successfully!");
     }
-} 
+}

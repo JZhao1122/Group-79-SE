@@ -3,7 +3,7 @@ package dto;
 import java.io.Serializable;
 
 /**
- * 用户实体类，存储用户基本信息
+ * User entity class, stores basic user information.
  */
 public class User implements Serializable {
     private String userId;
