@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Personal Finance Management System - JavaDoc</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+        }
+        .package-info {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .method-signature {
+            background: #f8f9fa;
+            padding: 10px;
+            border-left: 3px solid #27ae60;
+            font-family: 'Courier New', monospace;
+            margin: 5px 0;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .feature-list {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #27ae60;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+        }
+        .navigation {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .navigation a {
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        .emoji {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <strong>Quick Navigation:</strong>
+            <a href="#overview">Overview</a>
+            <a href="#architecture">Architecture</a>
+            <a href="#core-modules">Core Modules</a>
+            <a href="#gui">GUI Components</a>
+            <a href="#testing">Testing</a>
+            <a href="#getting-started">Getting Started</a>
+        </div>
+
+        <h1><span class="emoji">🤖</span> AI-Driven Personal Finance Management System</h1>
+        
+        <div class="package-info">
+            <strong>Project:</strong> Group-79-SE-main<br>
+            <strong>Version:</strong> 1.0<br>
+            <strong>Java Version:</strong> 11+<br>
+            <strong>Testing Framework:</strong> JUnit 5<br>
+            <strong>AI Integration:</strong> DeepSeek API
+        </div>
+
+        <h2 id="overview"><span class="emoji">📋</span> Project Overview</h2>
+        <p>
+            This is an advanced AI-driven personal finance management system that leverages machine learning
+            algorithms to provide intelligent financial insights, budget recommendations, and investment portfolio
+            optimization. The system combines modern GUI design with sophisticated AI analysis to deliver
+            a comprehensive financial management solution.
+        </p>
+
+        <h2 id="architecture"><span class="emoji">🏗️</span> System Architecture</h2>
+        
+        <h3>Package Structure</h3>
+        <div class="code-block">
+ai_core/                    - Core AI and financial analysis algorithms
+├── AITransactionClassifier.java
+├── BudgetRecommender.java
+├── SavingsOptimizer.java
+├── SpendingPatternAnalyzer.java
+├── SeasonalSpendingDetector.java
+├── ClassifierFeedbackManager.java
+├── DataLoader.java
+├── Transaction.java
+└── TestRunner.java
+
+GUI/                        - Graphical User Interface components
+├── ui/                     - UI Panels and Components
+├── service/                - Service Layer Interfaces
+├── mock/                   - Mock Service Implementations
+├── dto/                    - Data Transfer Objects
+└── exception/              - Custom Exception Classes
+
+test/                       - Comprehensive Test Suite
+├── FinancialAppMainFunctionsTest.java
+└── JUnitImportTest.java
+        </div>
+
+        <h2 id="core-modules"><span class="emoji">🧠</span> Core AI Modules</h2>
+        
+        <h3>AITransactionClassifier</h3>
+        <div class="package-info">
+            <strong>Package:</strong> ai_core<br>
+            <strong>Purpose:</strong> AI-powered transaction classification system using machine learning algorithms
+        </div>
+        
+        <p><strong>Key Methods:</strong></p>
+        <div class="method-signature">
+            public static void trainModel(List&lt;Transaction&gt; transactions)
+        </div>
+        <div class="method-signature">
+            public static String classify(String description)
+        </div>
+        
+        <div class="feature-list">
+            <strong>Features:</strong>
+            <ul>
+                <li>Automatic transaction categorization</li>
+                <li>Machine learning pattern recognition</li>
+                <li>Confidence scoring for classifications</li>
+                <li>Continuous learning from user data</li>
+            </ul>
+        </div>
+
+        <h3>BudgetRecommender</h3>
+        <div class="package-info">
+            <strong>Package:</strong> ai_core<br>
+            <strong>Purpose:</strong> Intelligent budget recommendation engine with anomaly detection
+        </div>
+        
+        <p><strong>Key Methods:</strong></p>
+        <div class="method-signature">
+            public static List&lt;BudgetSuggestion&gt; recommendBudget(List&lt;Transaction&gt; transactions)
+        </div>
+        <div class="method-signature">
+            public static List&lt;Map&lt;String, Object&gt;&gt; detectAbnormalBudgetsStructured(List&lt;Transaction&gt; transactions)
+        </div>
+
+        <h3>SavingsOptimizer</h3>
+        <div class="package-info">
+            <strong>Package:</strong> ai_core<br>
+            <strong>Purpose:</strong> Advanced savings optimization with multi-goal planning
+        </div>
+        
+        <p><strong>Key Methods:</strong></p>
+        <div class="method-signature">
+            public static SavingsPlan generatePlan(double totalGoal, LocalDate deadline, List&lt;Transaction&gt; transactions)
+        </div>
+        <div class="method-signature">
+            public static List&lt;GoalPlan&gt; planMultiGoal(List&lt;Goal&gt; goals, List&lt;Transaction&gt; transactions)
+        </div>
+
+        <h2 id="gui"><span class="emoji">🖥️</span> GUI Components</h2>
+        
+        <h3>DeepManageApp</h3>
+        <div class="package-info">
+            <strong>Package:</strong> ui<br>
+            <strong>Purpose:</strong> Main application framework with modern tabbed interface
+        </div>
+        
+        <h3>Module5Panel (Portfolio Intelligence)</h3>
+        <div class="package-info">
+            <strong>Package:</strong> ui<br>
+            <strong>Purpose:</strong> Portfolio analysis and AI-powered investment recommendations
+        </div>
+        
+        <div class="feature-list">
+            <strong>Portfolio Features:</strong>
+            <ul>
+                <li>CSV portfolio data import</li>
+                <li>Real-time percentage calculations</li>
+                <li>AI-powered allocation optimization</li>
+                <li>Comprehensive investment analysis</li>
+                <li>Detailed recommendation explanations</li>
+            </ul>
+        </div>
+
+        <h2 id="testing"><span class="emoji">🧪</span> Testing Framework</h2>
+        
+        <h3>FinancialAppMainFunctionsTest</h3>
+        <div class="package-info">
+            <strong>Package:</strong> test<br>
+            <strong>Framework:</strong> JUnit 5<br>
+            <strong>Coverage:</strong> 100% of core functions
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Test Category</th>
+                    <th>Tests Count</th>
+                    <th>Coverage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Core Function Tests</td>
+                    <td>8</td>
+                    <td>100%</td>
+                </tr>
+                <tr>
+                    <td>Exception Handling Tests</td>
+                    <td>4</td>
+                    <td>100%</td>
+                </tr>
+                <tr>
+                    <td>Data Validation Tests</td>
+                    <td>15+</td>
+                    <td>Complete</td>
+                </tr>
+                <tr>
+                    <td>Boundary Condition Tests</td>
+                    <td>10+</td>
+                    <td>Comprehensive</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="getting-started"><span class="emoji">🚀</span> Getting Started</h2>
+        
+        <h3>Quick Setup</h3>
+        <div class="code-block">
+# 1. Setup JUnit Environment
+setup_junit.bat
+
+# 2. Compile Project  
+compile_project.bat
+
+# 3. Run Tests
+run_tests.bat
+
+# 4. Launch Application
+java -cp "out/production/Group-79-SE-main;lib/*" ui.DeepManageApp
+        </div>
+        
+        <h3>Example Usage</h3>
+        <div class="code-block">
+// Create and analyze transactions
+List&lt;Transaction&gt; transactions = Arrays.asList(
+    new Transaction(LocalDate.now(), 45.0, "Dining", "Starbucks", "Credit Card"),
+    new Transaction(LocalDate.now(), 300.0, "Transportation", "Gas Station", "Debit Card")
+);
+
+// Train AI classifier
+AITransactionClassifier.trainModel(transactions);
+
+// Get budget recommendations  
+List&lt;BudgetRecommender.BudgetSuggestion&gt; suggestions = 
+    BudgetRecommender.recommendBudget(transactions);
+
+// Create savings plan
+SavingsOptimizer.SavingsPlan plan = SavingsOptimizer.generatePlan(
+    10000.0, LocalDate.now().plusMonths(6), transactions);
+        </div>
+
+        <h2><span class="emoji">📈</span> AI Integration</h2>
+        <div class="warning">
+            <strong>DeepSeek API Integration:</strong> The system integrates with DeepSeek AI API for intelligent
+            portfolio analysis and financial recommendations. API key configuration is required for full functionality.
+        </div>
+
+        <h2><span class="emoji">🔒</span> Exception Handling</h2>
+        <p>The system implements comprehensive exception handling with custom exception classes:</p>
+        <ul>
+            <li><strong>AlException</strong> - Base exception for AI service operations</li>
+            <li><strong>TransactionException</strong> - Transaction processing errors</li>
+            <li><strong>QueryException</strong> - Data query errors</li>
+            <li><strong>AuthException</strong> - Authentication errors</li>
+        </ul>
+
+        <h2><span class="emoji">📚</span> Dependencies</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Library</th>
+                    <th>Purpose</th>
+                    <th>Version</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>JUnit 5</td>
+                    <td>Testing Framework</td>
+                    <td>1.10.0</td>
+                </tr>
+                <tr>
+                    <td>JSON Library</td>
+                    <td>Data Processing</td>
+                    <td>2025-01-07</td>
+                </tr>
+                <tr>
+                    <td>Swing</td>
+                    <td>GUI Framework</td>
+                    <td>Built-in</td>
+                </tr>
+                <tr>
+                    <td>Java Time API</td>
+                    <td>Date/Time Handling</td>
+                    <td>Built-in</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top: 40px; padding: 20px; background: #ecf0f1; border-radius: 5px; text-align: center;">
+            <p><strong>Financial Management Development Team</strong></p>
+            <p>Version 1.0 | Last Updated: January 2024</p>
+            <p><em>For detailed API documentation, refer to individual class JavaDoc comments in the source code.</em></p>
+        </div>
+    </div>
+</body>
+</html> 
