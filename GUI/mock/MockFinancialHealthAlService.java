@@ -31,7 +31,6 @@ public class MockFinancialHealthAlService implements FinancialHealthAlService {
     public Map<String, BigDecimal> recommendBudget(String userId) throws AlException {
         System.out.println("[DeepSeek] Recommending budget for user: " + userId);
 
-        // 1. 获取所有交易数据
         List<TransactionData> allTransactions = financialTransactionService.getAllTransactions();
         String transactionDataJson = "";
         String dataGuidance;
@@ -96,7 +95,6 @@ public class MockFinancialHealthAlService implements FinancialHealthAlService {
             return Map.of("Info", BigDecimal.ZERO); // Or an empty map, or throw an error
         }
 
-        // 1. 获取所有交易数据
         List<TransactionData> allTransactions = financialTransactionService.getAllTransactions();
         String transactionDataJson = "";
         if (allTransactions != null && !allTransactions.isEmpty()) {

@@ -9,7 +9,7 @@ public class TransactionDisplayData {
     private String description;
     private BigDecimal amount;
     private String paymentMethod;
-    public String aiSuggestedCategory; // 来自 TransactionAnalysisAlService
+    public String aiSuggestedCategory; 
     private String currentCategory;     
 
     // Constructor
