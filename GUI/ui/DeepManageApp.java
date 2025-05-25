@@ -1,19 +1,15 @@
 package ui;// Import services and mocks
-import java.awt.*;
-import java.math.BigDecimal;
-import java.time.LocalDate; // Added for mock data
-import java.util.List;
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.ColorUIResource;
 
-import dto.TransactionData;
 import dto.User;
-import exception.AuthException;
-import exception.TransactionException;
 import mock.*;
 import real.FinancialTransactionServiceImpl;
 import service.*;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.ColorUIResource;
+import java.awt.*;
+import java.math.BigDecimal;
 
 public class DeepManageApp extends JFrame {
 
